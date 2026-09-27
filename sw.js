@@ -1,4 +1,4 @@
-const CACHE = 'notebook-v1';
+const CACHE = 'notebook-v2';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-512.png'];
 
 self.addEventListener('install', e => {
