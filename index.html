@@ -1,0 +1,1229 @@
+<!doctype html>
+<html lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="מודלים">
+<meta name="theme-color" content="#27588A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-512.png">
+<title>מחברת מודלים חישוביים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#F3F5F2; --surface:#FFFFFF; --surface2:#F8FAF8; --ink:#18212B; --muted:#586370; --line:#D5DCD6;
+  --accent:#27588A; --accent-ink:#FFFFFF; --accent-soft:#E2EBF4; --mark:#F1D27A; --mark-ink:#3A2C00;
+  --ok:#2C7A4B; --ok-soft:#E0F1E7; --bad:#B23B34; --bad-soft:#F8E3E1;
+  --serif:"Frank Ruhl Libre","David","Times New Roman",serif;
+  --sans:"Assistant","Segoe UI","Arial",sans-serif;
+  --mono:"IBM Plex Mono","Consolas","Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F151B; --surface:#161F28; --surface2:#1B2530; --ink:#E4E9EE; --muted:#9AA7B4; --line:#2A3743;
+    --accent:#80B6E8; --accent-ink:#0F151B; --accent-soft:#1C2D3E; --mark:#C99A2E; --mark-ink:#140E00;
+    --ok:#62C38E; --ok-soft:#15301F; --bad:#E57A71; --bad-soft:#3A1B19;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F151B; --surface:#161F28; --surface2:#1B2530; --ink:#E4E9EE; --muted:#9AA7B4; --line:#2A3743;
+  --accent:#80B6E8; --accent-ink:#0F151B; --accent-soft:#1C2D3E; --mark:#C99A2E; --mark-ink:#140E00;
+  --ok:#62C38E; --ok-soft:#15301F; --bad:#E57A71; --bad-soft:#3A1B19;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 64px}
+bdi.m,.m{font-family:var(--mono);font-size:.92em;direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.eq{font-family:var(--mono);direction:ltr;text-align:center;background:var(--surface2);border:1px solid var(--line);border-radius:6px;padding:10px 14px;margin:12px 0;overflow-x:auto;white-space:pre;font-size:.95em;line-height:1.7}
+.eq.left{text-align:left}
+sup,sub{font-size:.72em}
+h1,h2,h3{font-family:var(--serif);text-wrap:balance;line-height:1.25}
+a{color:var(--accent)}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+header.top{border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:env(safe-area-inset-top,0px);z-index:10}
+.top-in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 24px}
+.brand{display:flex;align-items:center;gap:12px;flex:1 1 auto;min-width:0}
+.brand h1{margin:0;font-size:1.45rem;font-weight:900}
+.brand .sub{color:var(--muted);font-size:.85rem}
+.count{font-variant-numeric:tabular-nums;background:var(--mark);color:var(--mark-ink);padding:4px 12px;border-radius:999px;font-weight:700;font-size:.9rem;white-space:nowrap}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 14px 6px 12px;border-radius:999px;font-weight:600}
+.tab .st{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);display:inline-block;flex:none}
+.tab[aria-selected="true"]{border-color:var(--accent);color:var(--accent)}
+.tab[aria-selected="true"] .st{border-color:var(--accent);box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--accent)}
+
+/* study layout */
+.study{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;margin-top:24px}
+.toc{position:sticky;top:90px;align-self:start;max-height:calc(100vh - 110px);overflow:auto;border-inline-start:2px solid var(--line);padding-inline-start:14px}
+.toc a{display:block;color:var(--muted);text-decoration:none;padding:4px 0;font-size:.95rem}
+.toc a:hover,.toc a.on{color:var(--accent)}
+.toc .grp{font-size:.75rem;letter-spacing:.06em;color:var(--muted);margin-top:14px;font-weight:700}
+main{min-width:0}
+article.ch{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 28px 22px;margin-bottom:26px}
+article.ch>h2{font-size:1.7rem;margin:18px 0 4px}
+article.ch h3{font-size:1.2rem;margin:22px 0 6px}
+.lead{color:var(--muted);margin-top:0}
+.points{display:inline-block;background:var(--accent-soft);color:var(--accent);font-family:var(--sans);font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px;vertical-align:middle;margin-inline-start:8px}
+.box{border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:14px 0;background:var(--surface2)}
+.box.tpl{border-inline-start:4px solid var(--accent)}
+.box.warn{border-inline-start:4px solid var(--bad);background:var(--bad-soft)}
+.box.tip{border-inline-start:4px solid var(--mark)}
+.box>b:first-child{display:block;margin-bottom:4px}
+.box ol,.box ul{margin:6px 0;padding-inline-start:22px}
+.tbl{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:start;vertical-align:top}
+th{background:var(--surface2);font-weight:700}
+td.c,th.c{text-align:center}
+.fig{margin:14px 0;overflow-x:auto;text-align:center}
+.fig svg{max-width:100%;height:auto}
+.fig figcaption{color:var(--muted);font-size:.85rem}
+.plan li{list-style:none;display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px dashed var(--line)}
+.plan{padding:0;margin:8px 0}
+.plan input{margin-top:6px;width:18px;height:18px;accent-color:var(--accent);flex:none}
+.plan .d{font-variant-numeric:tabular-nums;font-weight:700;min-width:54px;color:var(--accent)}
+.plan li.done span{text-decoration:line-through;color:var(--muted)}
+
+/* practice */
+.pwrap{margin-top:24px;display:grid;gap:26px}
+section.sec{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 24px 22px}
+section.sec>h2{font-size:1.5rem;margin:16px 0 4px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:3px 12px;border-radius:999px;font-size:.9rem}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tf-set{border:1px solid var(--line);border-radius:8px;padding:10px 16px;margin:14px 0;background:var(--surface2)}
+.tf-set .ctx{font-weight:700;margin-bottom:6px}
+.tf{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:8px 0;border-top:1px dashed var(--line)}
+.tf .btns{display:flex;gap:6px}
+.tf .btns button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:2px 12px}
+.tf .why{grid-column:1/-1;font-size:.93rem;padding:6px 10px;border-radius:6px}
+.tf.right .why{background:var(--ok-soft)}
+.tf.wrong .why{background:var(--bad-soft)}
+.tf.right button.pick{border-color:var(--ok);color:var(--ok);font-weight:700}
+.tf.wrong button.pick{border-color:var(--bad);color:var(--bad);font-weight:700}
+.score{font-variant-numeric:tabular-nums;font-weight:700}
+.q{border:1px solid var(--line);border-radius:8px;padding:12px 18px;margin:14px 0;background:var(--surface2)}
+.q .meta{display:flex;flex-wrap:wrap;gap:6px;font-size:.8rem;margin-bottom:4px}
+.q .meta span{background:var(--accent-soft);color:var(--accent);padding:1px 9px;border-radius:999px;font-weight:700}
+.q h3{margin:4px 0 6px;font-size:1.15rem}
+details.sol{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+details.sol summary{cursor:pointer;color:var(--accent);font-weight:700}
+.q textarea,.ask textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);font-family:var(--sans);font-size:1rem;padding:8px;resize:vertical}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:5px 16px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:default}
+.fb{white-space:pre-wrap;margin-top:8px;padding:10px 12px;border-radius:6px;background:var(--accent-soft);font-size:.95rem}
+.note{color:var(--muted);font-size:.88rem}
+.reg{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:8px 0;border-top:1px dashed var(--line)}
+
+/* ask */
+.ask{margin-top:24px;display:grid;grid-template-columns:1fr 280px;gap:24px}
+.chat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:420px}
+.log{display:flex;flex-direction:column;gap:10px;flex:1}
+.msg{padding:10px 14px;border-radius:10px;white-space:pre-wrap;max-width:92%}
+.msg.u{align-self:flex-start;background:var(--accent-soft)}
+.msg.a{align-self:flex-end;background:var(--surface2);border:1px solid var(--line)}
+.side{display:flex;flex-direction:column;gap:8px}
+.side button{text-align:start;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;font-size:.93rem}
+.side button:hover{border-color:var(--accent)}
+.empty{color:var(--muted)}
+
+@media (max-width:860px){
+  .study{grid-template-columns:1fr}
+  .toc{position:static;max-height:none;border:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 12px}
+  .toc .grp{width:100%}
+  .ask{grid-template-columns:1fr}
+  article.ch{padding:6px 16px 18px}
+  section.sec{padding:6px 16px 18px}
+}
+@media (prefers-reduced-motion:no-preference){ .tab,.chip,.btn{transition:border-color .15s,background .15s,color .15s} }
+</style>
+
+</head>
+<body>
+<div dir="rtl" lang="he">
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="14" fill="none" stroke="var(--accent)" stroke-width="2.5"/><circle cx="17" cy="17" r="9.5" fill="none" stroke="var(--accent)" stroke-width="2"/></svg>
+      <div>
+        <h1>מחברת מודלים חישוביים</h1>
+        <div class="sub">קורס 372.1.2306 · הכנה למועד ג׳ · מבחן ב־8/10/26</div>
+      </div>
+    </div>
+    <span class="count" id="count">…</span>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" id="t-study" aria-selected="true" data-p="study"><span class="st"></span>לימוד</button>
+      <button class="tab" role="tab" id="t-prac" aria-selected="false" data-p="prac"><span class="st"></span>תרגול</button>
+      <button class="tab" role="tab" id="t-ask" aria-selected="false" data-p="ask"><span class="st"></span>שאלות</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===================== STUDY ===================== -->
+<div id="p-study" class="panel">
+<div class="study">
+<nav class="toc" id="toc">
+  <div class="grp">התחלה</div>
+  <a href="#c-exam">מבנה המבחן ותוכנית</a>
+  <div class="grp">שפות רגולריות</div>
+  <a href="#c-fa">אוטומטים ‏DFA ו־NFA</a>
+  <a href="#c-conv">המרה מ־NFA ל־DFA</a>
+  <a href="#c-re">ביטויים רגולריים</a>
+  <a href="#c-reg">רגולרית או לא</a>
+  <a href="#c-pump">למת הניפוח</a>
+  <div class="grp">חישוביות</div>
+  <a href="#c-tm">מכונות טיורינג</a>
+  <a href="#c-halt">בעיית העצירה ומכונה אוניברסלית</a>
+  <div class="grp">סיבוכיות</div>
+  <a href="#c-np">מחלקות P ו־NP</a>
+  <a href="#c-tf">שאלה 2: נכון או לא נכון</a>
+  <a href="#c-red">שאלה 1: הוכחת NPC</a>
+  <a href="#c-classic">רדוקציות מהשקפים</a>
+  <div class="grp">לא בחומר השנה</div>
+  <a href="#c-cfg">דקדוקים ואוטומט מחסנית</a>
+</nav>
+
+<main>
+<!-- EXAM -->
+<article class="ch" id="c-exam">
+<h2>מבנה המבחן ותוכנית עבודה</h2>
+<p class="lead">בכל המבחנים משנת 2017 עד 2026 המבנה כמעט זהה. בשנת 2026 המבחן נמשך שעתיים וחצי, בלי חומר עזר.</p>
+<div class="tbl"><table>
+<tr><th>שאלה</th><th class="c">ניקוד</th><th>מה נשאל כמעט תמיד</th></tr>
+<tr><td>שאלה 1 (חובה)</td><td class="c">26</td><td>להוכיח שבעיה חדשה היא NPC ברדוקציה מבעיה מוכרת</td></tr>
+<tr><td>שאלה 2 (חובה)</td><td class="c">5</td><td>חמש קביעות נכון או לא נכון על P, NP ו־NPC. תשובה שגויה מורידה נקודה</td></tr>
+<tr><td>שאלה 3 (חובה)</td><td class="c">23</td><td>שתי שפות: אם השפה רגולרית בונים אוטומט או ביטוי רגולרי, ואם לא מוכיחים בלמת הניפוח</td></tr>
+<tr><td>שאלות 4 עד 6 (בוחרים 2)</td><td class="c">23 כל אחת</td><td>המרות בין NFA, ‏DFA וביטוי רגולרי, מכונת טיורינג, בעיית העצירה, מכונה אוניברסלית, והוכחות NPC מהשקפים</td></tr>
+</table></div>
+<div class="box tip"><b>עדכונים מקבוצת הוואטסאפ של הקורס (2026)</b><ul>
+<li><b>דקדוקים חסרי הקשר ואוטומט מחסנית לא בחומר השנה</b>. הפרק הועבר לסוף ואפשר לדלג עליו.</li>
+<li><b>ארבעה סוגי שאלות ידועים מראש</b>: רדוקציה, הפרכה בלמת הניפוח, אוטומטים ומכונות טיורינג.</li>
+<li><b>שאלות טיורינג בבחירה</b>: במבנה המבחן שנשלח במייל נכתב שתהיה שאלת טיורינג אחת מתוך שלוש. במועד ב׳ היו בפועל שתיים (מכונה ומכונה אוניברסלית). לא כדאי להסתמך על זה, כדאי להכיר את שני הנושאים.</li>
+<li><b>ההוכחות מההרצאות בחומר</b>, כולל החומר המשלים בסוף המצגת האחרונה (למשל הסוכן הנוסע). בשאלות הבחירה מבקשים בדרך כלל אחת מההוכחות שנעשו בכיתה.</li>
+<li><b>משך המבחן: שעתיים וחצי</b>. במועד א׳ הוארך באמצע לשלוש שעות, במועד ב׳ לא. <b>אין דף טיוטה</b>.</li>
+<li><b>מכונת טיורינג צריך לשרטט</b>, אלא אם כתוב במפורש שמספיק פסאודו־קוד. 2 עד 3 מצבים עודפים זה בסדר.</li>
+<li><b>ב־DFA, מצב המלכודת הוא מצב רגיל</b> לכל דבר. אסור להתעלם ממנו בהמרות.</li>
+<li><b>ניקוד שאלה 2</b>: נקודה על תשובה נכונה, מינוס נקודה על שגויה.</li>
+</ul></div>
+<div class="box tip"><b>מבוסס על השקפים</b>ההוכחות בפרקי מכונות טיורינג, בעיית העצירה וסיבוכיות נבדקו מול מצגות ההרצאה 9 עד 12. איפה שההרצאה והתרגול עושים את אותו דבר בדרכים שונות, מופיעות שתי הדרכים.</div>
+<div class="box tip"><b>אסטרטגיה</b>שאלות 1 עד 3 שוות 54 נקודות ונושאיהן ידועים מראש. בשאלות הבחירה כדאי לשלוט בשלושה נושאים: המרות אוטומטים, מכונות טיורינג וההוכחות מהשקפים. כך תמיד יהיו לך שתי שאלות שאתה מכיר.</div>
+<h3>תוכנית עד המבחן</h3>
+<p class="note">הסימונים נשמרים בדפדפן הזה בלבד.</p>
+<ul class="plan" id="plan"></ul>
+</article>
+
+<!-- FA -->
+<article class="ch" id="c-fa">
+<h2>אוטומטים סופיים</h2>
+<p class="lead">אוטומט סופי קורא מילה אות אחרי אות, עובר בין מצבים, ובסוף מקבל או דוחה אותה.</p>
+<h3>מושגי יסוד (תרגול 1, עבודה 1)</h3>
+<div class="tbl"><table>
+<tr><th>מושג</th><th>משמעות</th></tr>
+<tr><td>אלפבית Σ</td><td>קבוצה סופית של אותיות, למשל a ו־b</td></tr>
+<tr><td>מילה</td><td>רצף סופי של אותיות. האורך שלה מסומן בערך מוחלט</td></tr>
+<tr><td>המילה הריקה λ</td><td>מילה באורך 0. שרשור שלה לכל מילה לא משנה אותה</td></tr>
+<tr><td>שפה</td><td>קבוצה של מילים. יכולה להיות סופית או אינסופית</td></tr>
+<tr><td>שרשור שפות</td><td>כל המילים שמתקבלות ממילה של הראשונה ואחריה מילה של השנייה. שרשור עם השפה הריקה ∅ נותן ∅, ושרשור עם השפה שמכילה רק את λ לא משנה כלום</td></tr>
+<tr><td>היפוך</td><td>כותבים את המילה מהסוף להתחלה. היפוך של שפה הופך כל מילה בה</td></tr>
+<tr><td>חזקה וכוכב</td><td>חזקה n היא שרשור של n עותקים, וחזקה 0 היא {λ}. הכוכב הוא איחוד כל החזקות, ולכן תמיד מכיל את λ. הכוכב של ∅ הוא {λ}</td></tr>
+<tr><td>Σ+</td><td>כל המילים שאינן ריקות</td></tr>
+</table></div>
+<p>הכוכב של האלפבית מסומן כך, והוא קבוצת כל המילים, כולל הריקה:</p>
+<div class="eq">Σ* = { λ, a, b, aa, ab, ba, bb, aaa, … }</div>
+<h3>אוטומט דטרמיניסטי (DFA)</h3>
+<p>חמישייה של מצבים, אלפבית, פונקציית מעברים, מצב התחלה וקבוצת מצבים מקבלים. מכל מצב, לכל אות, יש <b>מעבר אחד בדיוק</b>. אם מעבר חסר, מוסיפים מצב מלכודת שכל האותיות בו חוזרות אליו. השפה של האוטומט היא כל המילים שמסיימות את הקריאה במצב מקבל.</p>
+<div class="box tpl"><b>איך מתכננים DFA</b><ol>
+<li>שואלים מה צריך לזכור מהקלט שנקרא עד עכשיו כדי להחליט בסוף. כל "זיכרון" אפשרי הוא מצב.</li>
+<li>לתת־מחרוזת (מכילה, מתחילה או נגמרת ב־abb): כל מצב הוא "כמה מהתבנית כבר ראיתי ברצף". בתבנית "נגמרת ב־" צריך לחשוב לאן חוזרים כשהרצף נשבר, למשל אחרי ab שבאה אחריה a חוזרים למצב "ראיתי a".</li>
+<li>לשני תנאים בבת אחת (למשל אורך אי־זוגי וגם בלי abba): כל מצב הוא זוג, אחד לכל תנאי. זו "מכפלת אוטומטים".</li>
+<li>בודקים שלכל מצב יש מעבר בכל אות, ומוסיפים מלכודת.</li>
+</ol></div>
+<p><b>משלים</b>: כדי לקבל את השפה המשלימה מ־DFA שלם, מחליפים בין מצבים מקבלים ללא מקבלים. זה עובד רק ב־DFA שלם (עם מלכודת), לא ב־NFA.</p>
+<h3>אוטומט אי־דטרמיניסטי (NFA)</h3>
+<ul>
+<li>אותה אות יכולה להוביל לכמה מצבים, או לאף מצב.</li>
+<li>יש מעברי <bdi class="m">λ</bdi> שעוברים בהם בלי לקרוא אות. בקורס מסמנים את המילה הריקה ב־<bdi class="m">λ</bdi>.</li>
+<li>מילה מתקבלת אם <b>קיים</b> מסלול קריאה כלשהו שמסתיים במצב מקבל.</li>
+</ul>
+<div class="box tip"><b>משפט חשוב</b>לכל NFA יש DFA שקול, ולכן שני סוגי האוטומטים מקבלים בדיוק את אותה משפחה: השפות הרגולריות. זו גם המשפחה שמתוארת בביטויים רגולריים.</div>
+<h3>בניית אוטומט לתנאי ספירה</h3>
+<p>כשהשפה מוגדרת בעזרת שארית חלוקה, למשל "מספר ה־a מתחלק ב־3", כל מצב זוכר את השארית. אם התנאי מערב שתי אותיות, כל מצב זוכר זוג שאריות. כך נוצרת רשת של 3 על 3, בסך הכול 9 מצבים. זה הפתרון הרשמי של מועד א׳ 2026:</p>
+<div class="eq">q<sub>(i,j)</sub> = (#a mod 3 , #b mod 3)      a: (i,j) → (i+1 mod 3 , j)      b: (i,j) → (i , j+1 mod 3)</div>
+<p>אחרי שבונים את הרשת רק בוחרים אילו זוגות הם מקבלים. באיחוד מסמנים זוגות שמקיימים לפחות תנאי אחד, ובחיתוך רק זוגות שמקיימים את שני התנאים.</p>
+</article>
+
+<!-- CONV -->
+<article class="ch" id="c-conv">
+<h2>המרה מ־NFA ל־DFA<span class="points">שאלת בחירה</span></h2>
+<p class="lead">שיטת תת־הקבוצות: כל מצב ב־DFA הוא קבוצה של מצבי NFA שאפשר להיות בהם באותו רגע.</p>
+<div class="box tpl"><b>האלגוריתם</b><ol>
+<li>סגור־λ של מצב הוא המצב עצמו, יחד עם כל המצבים שמגיעים אליהם ממנו רק במעברי λ.</li>
+<li>מצב ההתחלה של ה־DFA הוא סגור־λ של מצב ההתחלה של ה־NFA.</li>
+<li>לכל קבוצה חדשה ולכל אות: מאחדים את כל המעברים של מצבי הקבוצה באות הזו, ואז לוקחים סגור־λ של התוצאה.</li>
+<li>ממשיכים עד שלא נוצרות קבוצות חדשות. אם מתקבלת הקבוצה הריקה, היא מצב מלכודת שכל האותיות בו חוזרות אליו.</li>
+<li>קבוצה היא מצב מקבל אם היא מכילה לפחות מצב מקבל אחד של ה־NFA.</li>
+</ol></div>
+<h3>דוגמה: מילים שמכילות aa</h3>
+<figure class="fig">
+<svg viewBox="0 0 520 170" width="520" role="img" aria-label="NFA עם שלושה מצבים">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--ink)"/></marker></defs>
+<g font-family="IBM Plex Mono,monospace" font-size="15" fill="var(--ink)">
+<line x1="20" y1="100" x2="72" y2="100" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/>
+<circle cx="100" cy="100" r="26" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><text x="100" y="105" text-anchor="middle">q0</text>
+<circle cx="260" cy="100" r="26" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><text x="260" y="105" text-anchor="middle">q1</text>
+<circle cx="420" cy="100" r="26" fill="var(--mark)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="420" cy="100" r="20" fill="none" stroke="var(--ink)" stroke-width="1.4"/><text x="420" y="105" text-anchor="middle" fill="var(--mark-ink)">q2</text>
+<line x1="126" y1="100" x2="232" y2="100" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/><text x="179" y="92" text-anchor="middle">a</text>
+<line x1="286" y1="100" x2="392" y2="100" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/><text x="339" y="92" text-anchor="middle">a</text>
+<path d="M88,76 C70,28 130,28 112,76" fill="none" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/><text x="100" y="34" text-anchor="middle">a,b</text>
+<path d="M408,76 C390,28 450,28 432,76" fill="none" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/><text x="420" y="34" text-anchor="middle">a,b</text>
+</g></svg>
+<figcaption>אי־דטרמיניזם: מ־q0 עם a אפשר גם להישאר וגם לעבור ל־q1</figcaption>
+</figure>
+<div class="tbl"><table>
+<tr><th>מצב ב־DFA</th><th class="c">עם a</th><th class="c">עם b</th><th class="c">מקבל?</th></tr>
+<tr><td>א = <bdi class="m">{q0}</bdi> (התחלה)</td><td class="c"><bdi class="m">{q0,q1}</bdi></td><td class="c"><bdi class="m">{q0}</bdi></td><td class="c">לא</td></tr>
+<tr><td>ב = <bdi class="m">{q0,q1}</bdi></td><td class="c"><bdi class="m">{q0,q1,q2}</bdi></td><td class="c"><bdi class="m">{q0}</bdi></td><td class="c">לא</td></tr>
+<tr><td>ג = <bdi class="m">{q0,q1,q2}</bdi></td><td class="c"><bdi class="m">{q0,q1,q2}</bdi></td><td class="c"><bdi class="m">{q0,q2}</bdi></td><td class="c">כן</td></tr>
+<tr><td>ד = <bdi class="m">{q0,q2}</bdi></td><td class="c"><bdi class="m">{q0,q1,q2}</bdi></td><td class="c"><bdi class="m">{q0,q2}</bdi></td><td class="c">כן</td></tr>
+</table></div>
+<div class="box warn"><b>טעויות נפוצות שהבודק ציין</b><ul>
+<li>מגישים את האוטומט המקורי כמו שהוא, או מקבלים בסוף אוטומט שעדיין אינו דטרמיניסטי.</li>
+<li>שוכחים לסמן מצבים מקבלים. כל קבוצה שמכילה מצב מקבל היא מקבלת.</li>
+<li>שוכחים את סגור־λ, או שוכחים את מצב המלכודת של הקבוצה הריקה.</li>
+</ul></div>
+<p>בכל מצב של ה־DFA כתוב אילו מצבי NFA הוא מייצג, כך מבקשים בשאלות.</p>
+</article>
+
+<!-- RE -->
+<article class="ch" id="c-re">
+<h2>ביטויים רגולריים<span class="points">שאלת בחירה</span></h2>
+<p class="lead">בקורס כותבים <bdi class="m">+</bdi> לאיחוד, שרשור בצמידות, <bdi class="m">*</bdi> לסגור קלייני ו־<bdi class="m">λ</bdi> למילה הריקה.</p>
+<p><b>סדר קדימויות</b>: קודם כוכב, אחר כך שרשור, ובסוף איחוד. לכן <bdi class="m">ab*</bdi> פירושו a ואחריה כמה b, ולא ab שחוזר על עצמו.</p>
+<p>למשל, הביטוי הבא מתאר את כל המילים באורך 2 לפחות:</p>
+<div class="eq">(a+b)(a+b)(a+b)*</div>
+<h3>כתיבת ביטוי לשפה (תרגול 1)</h3>
+<div class="tbl"><table>
+<tr><th>השפה</th><th>ביטוי</th></tr>
+<tr><td>אין בה ab כתת־מחרוזת</td><td><bdi class="m">b*a*</bdi></td></tr>
+<tr><td>מספר אי־זוגי של a</td><td><bdi class="m">(aa)*a</bdi></td></tr>
+<tr><td>מספר אי־זוגי של a, מעל a ו־b</td><td><bdi class="m">b*ab*(ab*ab*)*</bdi></td></tr>
+<tr><td>בדיוק b אחת</td><td><bdi class="m">a*ba*</bdi></td></tr>
+<tr><td>מכילה ab</td><td><bdi class="m">(a+b)*ab(a+b)*</bdi></td></tr>
+<tr><td>אורך מתחלק ב־6</td><td><bdi class="m">((a+b)(a+b)(a+b)(a+b)(a+b)(a+b))*</bdi></td></tr>
+<tr><td>שני המספרים באותה זוגיות</td><td><bdi class="m">(aa)*(bb)* + (aa)*a(bb)*b</bdi></td></tr>
+</table></div>
+<p>הטריק: מחלקים למקרים ומחברים אותם באיחוד, ומשתמשים בכוכב על "יחידה" שחוזרת.</p>
+<h3>מביטוי רגולרי ל־NFA</h3>
+<p>בתרגול 3 ובעבודה 2 משתמשים בשיטת <b>פירוק קשתות</b>: מתחילים מקשת אחת מ־S ל־F שהתווית שלה היא כל הביטוי, ומפרקים אותה שוב ושוב עד שעל כל קשת נשארת אות בודדת או λ.</p>
+<div class="box tpl"><b>כללי הפירוק (לפי התרגול)</b><ul>
+<li><b>איחוד</b>: קשת עם התווית R+S הופכת לשתי קשתות מקבילות, אחת R ואחת S.</li>
+<li><b>שרשור</b>: קשת עם התווית RS הופכת לשתי קשתות רצופות, עם מצב חדש באמצע.</li>
+<li><b>כוכב</b>: קשת עם התווית R* הופכת למעבר λ אל מצב חדש, לולאה עם R על המצב החדש, ומעבר λ החוצה.</li>
+</ul></div>
+<p>בתרגול פירקו כך את הביטוי <bdi class="m">a+b+c(a+b)*b</bdi>. ממצב ההתחלה יש קשת עם a או b ישר למצב המקבל, ומסלול שני: c, מעבר λ למצב עם לולאה של a ו־b, מעבר λ, ובסוף b.</p>
+<p>בשאלה מ־2023 ביקשו NFA לביטוי הבא, ומספיק להראות רק את האוטומט הסופי:</p>
+<div class="eq">(ba+λ)(ab*+c*+b)</div>
+<p>פירוק לפי הכללים. השרשור יוצר מצב אמצעי M, כך שמ־S ל־M התווית היא החלק הראשון, ומ־M ל־F התווית היא החלק השני. כל איחוד מתפצל לקשתות מקבילות:</p>
+<div class="eq left">S --b--> p --a--> M          S --λ--> M                      (ba+λ)
+M --a--> r --λ--> r' (loop b) --λ--> F                     (ab*)
+M --λ--> s (loop c) --λ--> F                               (c*)
+M --b--> F                                                 (b)</div>
+<h3>מ־NFA לביטוי רגולרי בשיטת ביטול מצבים</h3>
+<div class="box tpl"><b>האלגוריתם מההרצאה</b><ol>
+<li>מוסיפים מצב התחלה חדש S עם מעבר λ למצב ההתחלה הישן, ומצב סיום חדש F עם מעברי λ מכל המצבים המקבלים.</li>
+<li>מאחדים קשתות מקבילות לקשת אחת עם איחוד (למשל <bdi class="m">a+λ</bdi>).</li>
+<li>מבטלים את המצבים אחד אחד, לפי הסדר שנדרש בשאלה. בביטול מצב k מעדכנים כל זוג מצבים i ו־j לפי הנוסחה שמתחת לרשימה.</li>
+<li>ממשיכים עד שנשארים רק S ו־F. התווית על הקשת ביניהם היא התשובה.</li>
+</ol></div>
+<p>נוסחת העדכון בביטול מצב k:</p>
+<div class="eq">new(i,j) = old(i,j) + old(i,k) · old(k,k)* · old(k,j)</div>
+<ul>
+<li><b>אם אין קשת</b> ישירה מ־i ל־j, האיבר הראשון פשוט נעלם.</li>
+<li><b>אם אין לולאה על k</b>, הכוכב נעלם ומשרשרים ישירות.</li>
+<li><b>עוברים על כל זוג</b> של מצב שנכנס ל־k ומצב שיוצא מ־k, כולל זוג שבו i ו־j הם אותו מצב. זוג כזה יוצר לולאה חדשה.</li>
+</ul>
+<p>בפתרון של מועד א׳ 2026 ביטלו קודם את q0 שהייתה לו לולאה עם a. הקשת מ־S ל־q1 קיבלה את התווית <bdi class="m">a*b</bdi>, והלולאה על q1 קיבלה את התווית <bdi class="m">c+ca*b</bdi>. בכל שלב מציירים את האוטומט מחדש, כי מבקשים "שלב אחר שלב".</p>
+</article>
+
+<!-- REG -->
+<article class="ch" id="c-reg">
+<h2>רגולרית או לא?<span class="points">שאלה 3, חובה</span></h2>
+<p class="lead">השאלה הראשונה בכל סעיף היא האם אוטומט עם מספר סופי של מצבים יכול לזכור את מה שצריך.</p>
+<div class="tbl"><table>
+<tr><th>סימן</th><th>בדרך כלל</th><th>דוגמה מהמבחנים</th></tr>
+<tr><td>שאריות חלוקה בקבוע, זוגיות, אורך מודולו k</td><td>רגולרית</td><td>מספר ה־a מודולו 3 שווה למספר ה־b מודולו 3</td></tr>
+<tr><td>מספר קבוע של מופעים (למשל בדיוק 1 אחת)</td><td>רגולרית</td><td>מילה עם 1 אחת ואורך ששארית החלוקה שלו ב־3 היא 2</td></tr>
+<tr><td>השוואה בין שתי כמויות לא חסומות</td><td>לא רגולרית</td><td>מספר ה־a שווה (או שונה) ממספר ה־b</td></tr>
+<tr><td>פלינדרום, מילה שחוזרת על עצמה</td><td>לא רגולרית</td><td>מילה ששווה להיפוך שלה</td></tr>
+<tr><td>n שמופיע פעמיים באותה מילה</td><td>לא רגולרית</td><td><bdi class="m">a<sup>n</sup>b<sup>n</sup></bdi></td></tr>
+</table></div>
+<div class="box warn"><b>מלכודות שהמרצה אוהב</b><ul>
+<li><b>מקרה קצה שבולע הכול</b>. במועד ב׳ 2026 השפה נראתה כמו <bdi class="m">a<sup>n</sup>b<sup>n</sup></bdi> ועוד מילה V באורך 2 לפחות. אבל n יכול להיות 0, ולכן השפה היא כל המילים באורך 2 לפחות, והיא רגולרית.</li>
+<li><b>"שונה" במקום "שווה"</b>. שפה עם תנאי "שונה" לא רגולרית כשהמשלימה שלה לא רגולרית. מוכיחים על המשלימה, שתנאי "שווה" נוח לה יותר, כי המשלים של שפה רגולרית גם הוא רגולרי.</li>
+<li><b>חיתוך עם שפה רגולרית</b> יכול לתת שפה רגולרית. למשל, חיתוך של <bdi class="m">a<sup>m</sup>b<sup>n</sup></bdi> עם מילים באורך זוגי הוא רגולרי.</li>
+</ul></div>
+<h3>תכונות סגירות</h3>
+<p>השפות הרגולריות סגורות לאיחוד, חיתוך, משלים, שרשור, כוכב והיפוך. לכן אם השפה המשלימה אינה רגולרית, גם השפה עצמה אינה רגולרית.</p>
+<ul>
+<li><b>כל שפה סופית רגולרית</b>, גם אם התנאי שלה נראה מסובך. בתרגול 5 הייתה שפה עם תנאי שמגביל את האורך ל־5, והפתרון היה NFA שפשוט מונה את כל האפשרויות.</li>
+<li><b>איחוד של שפה לא רגולרית עם רגולרית</b> יכול להיות רגולרי או לא. צריך לבדוק כל מקרה.</li>
+</ul>
+<h3>כשהשפה רגולרית: מה לכתוב</h3>
+<p>מספיק ביטוי רגולרי או אוטומט (DFA או NFA) עם הסבר קצר מה כל מצב זוכר. בחיתוך או איחוד של תנאי ספירה, כדאי לצייר את רשת המצבים ולציין אילו מצבים מקבלים ולמה.</p>
+</article>
+
+<!-- PUMP -->
+<article class="ch" id="c-pump">
+<h2>למת הניפוח<span class="points">שאלה 3, חובה</span></h2>
+<p class="lead">הבודקים מצפים לתבנית קבועה. כדאי לשנן אותה מילה במילה ולשנות רק את המילה שבוחרים ואת הנימוק בסוף.</p>
+<h3>הלמה עצמה</h3>
+<p>אם L רגולרית ויש לה DFA עם m מצבים, אז כל מילה בשפה שאורכה לפחות m אפשר לפרק לשלושה חלקים, כך שמתקיימים התנאים הבאים:</p>
+<div class="eq">w = xyz ,   |xy| ≤ m ,   |y| ≥ 1 ,   and   x y^i z ∈ L  for every i ≥ 0</div>
+<p><b>למה זה נכון</b> (עקרון שובך היונים): בקריאת m האותיות הראשונות האוטומט עובר ב־m+1 מצבים, אבל יש לו רק m מצבים שונים. לכן מצב כלשהו חוזר, והקטע שבין שני הביקורים בו הוא y. אפשר לעבור בלולאה הזו כמה פעמים שרוצים, או לדלג עליה.</p>
+<p><b>שימו לב</b>: הלמה היא כלי להוכיח ששפה <b>אינה</b> רגולרית. אם מילה מסוימת כן אפשר לנפח, זה לא מוכיח שהשפה רגולרית.</p>
+<div class="box tpl"><b>התבנית (לפי פתרונות הקורס)</b>
+<ol>
+<li>נניח בשלילה שהשפה רגולרית, ולכן קיים אוטומט סופי בעל m מצבים שמקבל אותה.</li>
+<li>נבחר מילה w, ונכתוב במפורש ששני התנאים מתקיימים: המילה שייכת לשפה, ואורכה לפחות m.</li>
+<li>נפרק את המילה לשלושה חלקים x, y ו־z. כיוון ש־xy באורך m לכל היותר, x ו־y נמצאים בתוך m האותיות הראשונות.</li>
+<li>לפי למת הניפוח, לכל i שאינו שלילי המילה שבה y מופיע i פעמים שייכת לשפה.</li>
+<li>נבחר i מתאים (בדרך כלל 0 או 2) ונראה שהמילה שמתקבלת <b>לא</b> בשפה, <b>לכל</b> k אפשרי.</li>
+<li>הגענו לסתירה, ולכן השפה אינה רגולרית.</li>
+</ol></div>
+<p>הפירוק בכתיבה המלאה, כשהמילה מתחילה ב־<bdi class="m">a<sup>m</sup></bdi>:</p>
+<div class="eq">w = a^m b^m        x = a^t ,  y = a^k ,  z = a^q b^m        t + k + q = m
+|xy| ≤ m ,  |y| ≥ 1   ⟹   1 ≤ k ≤ m
+∀ i ≥ 0 :  x y^i z = a^t a^(ik) a^q b^m ∈ L
+i = 2 :  a^(m+k) b^m ∉ L   for every 1 ≤ k ≤ m   (since m+k ≠ m)</div>
+<div class="box warn"><b>כלל מהתרגול (מודגש באדום בשקף)</b>אסור להניח שום דבר על k, כלומר על האורך של y. מותר לבחור את i. לכן ההוכחה חייבת לעבוד לכל k בין 1 ל־m.</div>
+<h3>איך בוחרים מילה</h3>
+<p>בתרגול 4 הראו שמילה ראשונה לא תמיד עובדת. בשפה שבה מספר ה־a מתחלק במספר ה־b, המילה <bdi class="m">a<sup>m</sup>b<sup>m</sup></bdi> לא מתאימה: עם i=2 ו־k=m מתקבלת מילה ששייכת לשפה. המילה <bdi class="m">a<sup>m+1</sup>b<sup>m+1</sup></bdi> כן עובדת. אם הניפוח לא שובר את התנאי לכל k, מחליפים מילה.</p>
+<p>לשפות על אות אחת (ריבועים, עצרת, ראשוניים, חזקות של 3) משתמשים ב"אין מספר מהצורה הנדרשת בין שני מספרים עוקבים מהצורה הזו":</p>
+<div class="eq">m² &lt; m²+k ≤ m²+m &lt; (m+1)²        3^m &lt; 3^m+k &lt; 3^(m+1)        m! &lt; m!+k &lt; (m+1)!</div>
+<ul>
+<li>שמים את מה שמנפחים <b>בהתחלה</b>, בתוך m האותיות הראשונות, כך שהחלק y מכיל רק אות אחת.</li>
+<li>בוחרים מילה "על הגבול" של התנאי, כך שכל שינוי קטן ישבור אותו. למשל, כשהתנאי הוא <bdi class="m">p &lt; n+r</bdi>, בחרו <bdi class="m">a<sup>m</sup>b<sup>m</sup>c</bdi>, ואז i=0 שובר את התנאי.</li>
+<li>אם יש תנאי שארית, מוסיפים לחזקה קבוע שמתאים לו (למשל <bdi class="m">a<sup>2m+1</sup></bdi> כשצריך מספר אי־זוגי).</li>
+<li>במקרים של k שונים שמתנהגים אחרת, מחלקים למקרים. כך נעשה במועד א׳ 2016: k=1 שובר את הזוגיות, ו־k גדול מ־1 שובר את אי־השוויון.</li>
+</ul>
+<div class="box warn"><b>טעויות נפוצות מהפתרונות הרשמיים</b><ul>
+<li>בחירת מילה שבכלל לא שייכת לשפה.</li>
+<li>ניפוח שמשאיר את המילה בשפה, או שובר את התנאי רק לחלק מערכי k.</li>
+<li>ניפוח במקום אחר מאשר ב־m האותיות הראשונות.</li>
+<li>הסבר חסר למה המילה אחרי הניפוח לא בשפה.</li>
+</ul></div>
+</article>
+
+
+<!-- TM -->
+<article class="ch" id="c-tm">
+<h2>מכונות טיורינג<span class="points">שאלת בחירה</span></h2>
+<p class="lead">סרט אינסופי, ראש קורא וכותב, ומצבים. מעבר נכתב כך: קוראים סימן, כותבים סימן וזזים ימינה או שמאלה.</p>
+<div class="eq">a → x , R          (read a, write x, move right)</div>
+<h3>המודל כפי שהוגדר בהרצאה 9 ובתרגול 6</h3>
+<ul>
+<li><b>הסרט</b> אינסופי לשני הכיוונים. מחוץ לקלט כתוב רווח, שמסומן ◊.</li>
+<li><b>הראש</b> מתחיל על האות השמאלית של הקלט.</li>
+<li><b>המכונה דטרמיניסטית</b>: לכל מצב ולכל סימן יש לכל היותר מעבר אחד, ואין מעברי λ. מותר שלא יהיה מעבר בכלל.</li>
+<li><b>עצירה</b>: המכונה עוצרת כשאין מעבר מתאים.</li>
+<li><b>קבלה</b>: המכונה עצרה במצב מקבל.</li>
+<li><b>דחייה</b>: המכונה עצרה במצב לא מקבל, <b>או</b> שהיא רצה לנצח.</li>
+<li><b>ממצב סופי אין מעברים יוצאים</b> (כך בהרצאה). ברגע שמגיעים אליו המכונה עוצרת.</li>
+<li><b>הקלט אף פעם לא ריק</b> (הערה בשקף של הרצאה 9).</li>
+</ul>
+<p>ההגדרה הפורמלית היא שביעייה: מצבים, אלפבית קלט, אלפבית סרט, פונקציית מעברים, מצב התחלה, סימן רווח ומצבים סופיים.</p>
+<h3>מכונה שמחשבת פונקציה (הרצאה 9)</h3>
+<ul>
+<li><b>ייצוג אונרי</b>: בקורס מעדיפים לכתוב מספרים באונרי, כי קל יותר לעבוד איתם. למשל 5 נכתב כחמישה אחדים.</li>
+<li><b>פונקציה ניתנת לחישוב</b> אם יש מכונה שמתחילה עם הקלט על הסרט, ועוצרת במצב סופי כשעל הסרט כתוב רק הפלט.</li>
+<li><b>חיבור</b>: הקלט הוא x ו־y באונרי עם 0 ביניהם כמפריד. המכונה מחליפה את ה־0 ב־1, ואז מוחקת את ה־1 האחרון ומחזירה את הראש לתחילה.</li>
+<li><b>הכפלה ב־2</b>: מחליפים כל 1 ב־$. אחר כך, כל עוד יש $, מחליפים את ה־$ הימני ב־1 ומוסיפים 1 בסוף הסרט.</li>
+<li><b>השוואה</b> (1 אם x גדול מ־y, אחרת 0): מתאימים 1 מ־x ל־1 מ־y עד שאחד נגמר. אם נשאר 1 לא מותאם ב־x, מוחקים הכול וכותבים 1, אחרת 0.</li>
+<li><b>שילוב מכונות</b>: אפשר לחבר מכונות כקופסאות (דיאגרמת בלוקים), למשל משווה, מחבר ומוחק.</li>
+</ul>
+<h3>אסטרטגיה לבניית מכונה</h3>
+<ol>
+<li>כתבו קודם את הרעיון במילים, ואז <b>ציירו את המכונה</b>. המתרגל אמר בשנה הזו שחייבים לשרטט. פסאודו־קוד לבד מספיק רק כשהשאלה מבקשת אותו במפורש (כמו במועד א׳ 2026).</li>
+<li>לפי המתרגל, מכונה עם 2 או 3 מצבים יותר מהפתרון הרשמי היא בסדר. לא צריך את הפתרון הכי קצר.</li>
+<li>הטכניקה המרכזית היא <b>סימון ומחיקה</b>: מסמנים תו אחד, רצים לחפש את התו שמתאים לו, מסמנים גם אותו וחוזרים.</li>
+<li>המכונה חייבת להיות <b>דטרמיניסטית</b>, ואחרי מצב מקבל אסור להמשיך.</li>
+<li>במכונה שמחשבת פונקציה, בסוף על הסרט צריך להישאר רק הפלט. מוחקים סימני עזר כמו # או X.</li>
+</ol>
+<h3>דוגמה מהתרגול: השפה של מילים באורך חזקה של 2</h3>
+<div class="eq left">L = { a^i | i = 2^n , n ≥ 0 }
+1. Sweep left→right, cross off every second a.
+2. If exactly one a is left → ACCEPT.
+3. If the number of a's (before crossing) was odd and > 1 → REJECT.
+4. Return head to the left end and go to 1.</div>
+<p>במועד ב׳ 2026 שאלו את אותה שאלה עם חזקות של 3. במקום לחלק ב־2 מחלקים ב־3: בכל מעבר משאירים אחת מכל שלוש, ודוחים כשהמספר לא מתחלק ב־3.</p>
+<h3>דוגמה: חיסור אונרי</h3>
+<div class="eq left">Input 1111#11 → output 11   (x &gt; y &gt; 0)
+loop: go to the rightmost 1 of y, erase it (→ blank)
+      go left to x, cross its rightmost 1 (→ blank)
+      if y has no 1s left → erase '#', halt</div>
+<h3>מכונות שקולות (תרגול 7 ועבודה 3)</h3>
+<p>שני מודלים שקולים אם כל פעולה של אחד אפשר לבצע בפעולה אחת או בסדרת פעולות של השני, <b>בשני הכיוונים</b>. בשאלות כאלה צריך להראות את שני הכיוונים.</p>
+<div class="tbl"><table>
+<tr><th>המודל</th><th>שקול?</th><th>איך מדמים אותו במכונה רגילה (לפי התרגול)</th></tr>
+<tr><td>ראש שיכול גם להישאר במקום</td><td>כן</td><td>מההרצאה. תזוזה "הישאר" מדמים בתזוזה ימינה ואז חזרה שמאלה</td></tr>
+<tr><td>סרט חסום משמאל</td><td>כן</td><td>הכיוון הקל: פשוט לא משתמשים בחלק מהסרט. לכיוון הקשה יש שתי דרכים. <b>בהרצאה</b> מקפלים את הסרט: תא n במקום החיובי עובר לתא 2n−1, ותא n במקום השלילי עובר לתא 2n. יש שתי קבוצות מצבים, חיובית ושלילית, וכל תזוזה הופכת לתזוזה כפולה. <b>בתרגול</b> מזיזים את כל התוכן תא אחד ימינה כשצריך לזוז שמאלה מהתא הראשון</td></tr>
+<tr><td>כמה סרטים</td><td>כן</td><td>מההרצאה. כל סרט הופך לזוג מסלולים: אחד לתוכן ואחד לסימון מיקום הראש. בכל צעד חוזרים לנקודת ייחוס, מוצאים את הסימן בכל סרט ומבצעים את המעבר</td></tr>
+<tr><td>סרט דו־ממדי</td><td>כן</td><td>הראש זז גם למעלה ולמטה</td></tr>
+<tr><td>סרט עם שני מסלולים</td><td>כן</td><td>כל זוג סימנים הופך לסימן אחד חדש, למשל המעבר מ־(a,b) ל־(c,d) הופך למעבר מ־ab ל־cd</td></tr>
+<tr><td>שני ראשים (ובהרצאה השנה גם שלושה)</td><td>כן</td><td>מסמנים את מיקום כל ראש בסימן מיוחד (h1 ו־h2). כל צעד: מוצאים את h1, מבצעים, מזיזים את הסימן, ואז אותו דבר עם h2</td></tr>
+<tr><td>מכונה "בוררת" שבכל צעד כותבת או זזה</td><td>כן</td><td>צעד רגיל מתפצל לשני צעדים: כתיבה ואז תזוזה. בכיוון השני, כתיבה בלבד היא כתיבה, תזוזה ימינה ותזוזה חזרה שמאלה</td></tr>
+<tr><td>סרט תלת־ממדי</td><td>כן</td><td>מופיע כשאלת נכון או לא נכון בתרגול</td></tr>
+<tr><td>ראש שזז רק ימינה או נשאר במקום</td><td><b>לא</b></td><td>אי אפשר לחזור לקרוא את מה שנכתב, ולכן המודל חלש יותר</td></tr>
+<tr><td>מצב מקבל אחד בדיוק</td><td>כן</td><td>מאחדים את כל המצבים המקבלים למצב אחד</td></tr>
+</table></div>
+<p>מכונה אי־דטרמיניסטית שקולה לדטרמיניסטית מבחינת מה שאפשר לחשב, אבל לא מבחינת זמן הריצה. <b>אותו כוח אינו אותה מהירות</b>: בהרצאה, מכונה עם שני סרטים מקבלת את השפה של a ו־b בכמויות שוות בזמן לינארי, ומכונה רגילה צריכה זמן ריבועי.</p>
+<div class="box tip"><b>שאלה נפוצה: מה המכונה עושה?</b>מריצים את המכונה ביד על קלטים קצרים (ריק, a, aa, ab, aab) וכותבים את הסרט אחרי כל סבב. מחפשים את התבנית: מה מסומן בכל סבב ומתי המכונה מקבלת. בתרגול 6 מכונה כזו מסמנת בכל סבב שתי a ו־b אחת, ולכן היא מקבלת את השפה שבה מספר ה־a כפול ממספר ה־b והן ברצף.</div>
+<h3>מכונות מהתרגולים ומהעבודות</h3>
+<p>שאלות המבחן על מכונות טיורינג הן בדרך כלל וריאציה של אחת מאלה. כדאי לדעת לתאר כל אחת בפסאודו־קוד.</p>
+<div class="tbl"><table>
+<tr><th>שפה או פונקציה</th><th>רעיון</th></tr>
+<tr><td>מספר ה־a שווה למספר ה־b</td><td>מוחקים (מסמנים ב־$) a אחת ו־b אחת בכל סבב. מקבלים כשנשארו רק סימני $</td></tr>
+<tr><td>מספר ה־a שונה ממספר ה־b</td><td>אותו דבר, ומקבלים כשאחת האותיות נגמרה והשנייה לא</td></tr>
+<tr><td>שפה שבה b מופיע פי 2 מ־a ועוד 3</td><td>קודם מוחקים 3 אותיות b. אחר כך בכל סבב מוחקים a אחת ושתי אותיות b</td></tr>
+<tr><td>ארבע אותיות שונות, כל אחת n פעמים ברצף</td><td>בכל סבב מסמנים אחת מכל סוג וחוזרים לתחילה</td></tr>
+<tr><td>מילה שחוזרת פעמיים (ww)</td><td>מוצאים את האמצע: מסמנים לסירוגין את האות השמאלית והימנית שעוד לא סומנו. אחר כך משווים את שני החצאים אות אחר אות</td></tr>
+<tr><td>מילה שחוזרת שלוש פעמים (www)</td><td>אותו רעיון עם שלושה חלקים: מסמנים אות אחת משמאל ושתיים מימין</td></tr>
+<tr><td>אורך המילה מתחלק ב־5</td><td>מחזור של 5 מצבים שרק זזים ימינה</td></tr>
+<tr><td>שפה שבה מספר ה־b מתחלק במספר ה־a</td><td>מוחקים b אחת ומסמנים a אחת בכל סבב. כשכל ה־a מסומנות, מחזירים אותן ומתחילים סבב חדש</td></tr>
+<tr><td>הכפלת מספר אונרי (2x או 3x+1)</td><td>מסמנים כל 1 בנפרד ומוסיפים 1 אחד (או שניים) בסוף הסרט עבורו</td></tr>
+<tr><td>שארית חלוקה של x ב־4</td><td>מחזור של 4 מצבים שמוחק את הקלט, ובסוף כותבים את השארית</td></tr>
+<tr><td>עיגול למעלה של x חלקי 2</td><td>מחזירים 1 אחד, מוחקים את הבא, וחוזר חלילה</td></tr>
+<tr><td>המרה מאונרי לבינארי</td><td>מונה בינארי מימין לסימן $. מוחקים 1 אחד ומוסיפים 1 למונה, עם נשא</td></tr>
+<tr><td>x בריבוע</td><td>לכל 1 במספר מעתיקים את כל המספר פעם אחת</td></tr>
+</table></div>
+</article>
+
+<!-- HALT -->
+<article class="ch" id="c-halt">
+<h2>בעיית העצירה ומכונה אוניברסלית<span class="points">שאלת בחירה</span></h2>
+<h3>ניסוח</h3>
+<p>בהינתן תוכנית (מכונת טיורינג) Q וקלט X: האם Q עוצרת על X?</p>
+<div class="box tpl"><b>ההוכחה שהבעיה לא כריעה</b><ol>
+<li>נניח בשלילה שיש אלגוריתם <bdi class="m">Halt(Q,X)</bdi> שתמיד עוצר, ומחזיר אמת אם ורק אם Q עוצרת על X.</li>
+<li>נבנה תוכנית A שמקבלת תוכנית Q: אם <bdi class="m">Halt(Q,Q)</bdi> מחזיר אמת, A נכנסת ללולאה אינסופית. אחרת, A עוצרת.</li>
+<li>נריץ את A על עצמה. אם A עוצרת על A, אז <bdi class="m">Halt(A,A)</bdi> מחזיר אמת, ולכן לפי ההגדרה A נכנסת ללולאה. זו סתירה.</li>
+<li>אם A לא עוצרת על A, אז <bdi class="m">Halt(A,A)</bdi> מחזיר שקר, ולכן A עוצרת. גם זו סתירה.</li>
+<li>לכן האלגוריתם Halt לא קיים.</li>
+</ol></div>
+<p class="note">בפתרונות נכתב שמי שלא דייק בפרטים נקנס. צריך לציין במפורש את שני המקרים.</p>
+<p>בהרצאה ההוכחה כתובה כקוד:</p>
+<div class="eq left">Boolean Halt(Program P, Input x):  TRUE if P halts on x, else FALSE
+
+Program p1(Program p2):
+    if (Halt(p2, p2) == TRUE)  loop forever;
+    else                       exit;
+
+main():  p1(p1);
+If p1 halts on p1 → it loops forever.  If p1 never halts on p1 → it halts.  Contradiction.</div>
+<h3>רדוקציה לבעיות לא פתירות</h3>
+<p>מההרצאה: אם P לא פתירה ויש רדוקציה מ־P ל־P', גם P' לא פתירה. "לא פתירה" מתנהגת כמו חסם תחתון. כדי להוכיח שבעיה חדשה לא פתירה, עושים רדוקציה <b>מ</b>בעיה לא פתירה מוכרת, כמו בעיית העצירה.</p>
+<h3>שימוש ב־Halt כקופסה שחורה</h3>
+<p>שאלה מ־2015: אם Halt הייתה פתירה, איך היה אפשר לדעת אם יש מספר פרמה ראשוני מעבר לחמשת הראשונים? כותבים תוכנית שרצה על המספרים מ־6 והלאה ועוצרת כשהיא מוצאת ראשוני. אם אין כזה, היא רצה לנצח. שואלים את Halt אם התוכנית הזו עוצרת.</p>
+<h3>מכונת טיורינג אוניברסלית</h3>
+<p>מכונה U שמקבלת כקלט תיאור של מכונה M וקלט w, ומבצעת סימולציה של הריצה של M על w. זו שאלה ממועד ב׳ 2026.</p>
+<ul>
+<li><b>קידוד (הרצאה 10)</b>: כל מכונה נכתבת כמחרוזת של אפסים ואחדים. הסימן הראשון הוא 1, השני 11 וכן הלאה. באותו אופן המצב הראשון הוא 1 והשני 11. תזוזה שמאלה היא 1 וימינה 11. בתוך מעבר מפרידים בין החלקים ב־0, ובין מעברים ב־00. לכן אוסף המכונות הוא בעצמו שפה.</li>
+<li><b>שלושה סרטים</b>: סרט 1 מכיל את תיאור M, סרט 2 את תוכן הסרט של M, וסרט 3 את המצב הנוכחי של M.</li>
+<li><b>לולאה</b>: קוראים את המצב מסרט 3 ואת הסימן מסרט 2, מחפשים בסרט 1 את המעבר המתאים, כותבים, זזים ומעדכנים את המצב. U מקבלת אם M מקבלת.</li>
+</ul>
+<p>מעבר לדוגמה והקידוד שלו:</p>
+<div class="eq">δ(q1, a1) = (q2, a2, L)    →    1 0 1 0 11 0 11 0 1</div>
+<p>בהרצאה מופיעה רשימת "מצבים" של המכונה האוניברסלית, כמו מחזור של שליפה וביצוע במחשב:</p>
+<div class="eq left">Q1: read the state of M from tape 3
+Q2: read the letter of M from tape 2
+Q3: go right on tape 1 until you find that state
+Q4: go right on tape 1 until you find that letter
+Q5: read the new letter on tape 1
+Q6: write it on tape 2
+Q7: read the direction on tape 1
+Q8: move the head of tape 2 accordingly
+Q9: read the new state on tape 1
+Q10: write it on tape 3
+Q11: go back to the start of the tapes, repeat</div>
+<h3>התזה של צ׳רץ׳ וטיורינג</h3>
+<p>כל חישוב שאפשר לבצע באופן מכני אפשר לבצע במכונת טיורינג. זו תזה ולא משפט: אין לה הוכחה פורמלית. לכן "קיים אלגוריתם" פירושו "קיימת מכונת טיורינג".</p>
+</article>
+
+<!-- NP -->
+<article class="ch" id="c-np">
+<h2>מחלקות P ו־NP</h2>
+<div class="tbl"><table>
+<tr><th>מחלקה</th><th>הגדרה</th></tr>
+<tr><td>P</td><td>בעיות הכרעה שיש להן אלגוריתם דטרמיניסטי בזמן פולינומיאלי</td></tr>
+<tr><td>NP</td><td>בעיות שאפשר <b>לאמת</b> פתרון שלהן בזמן פולינומיאלי. זה שקול לפתרון בזמן פולינומיאלי במכונה אי־דטרמיניסטית</td></tr>
+<tr><td>NP־קשה</td><td>כל בעיה ב־NP ניתנת לרדוקציה פולינומיאלית אליה. הבעיה לא חייבת להיות ב־NP</td></tr>
+<tr><td>NPC</td><td>בעיה שהיא גם ב־NP וגם NP־קשה</td></tr>
+</table></div>
+<p>ידוע שמחלקה P מוכלת ב־NP. השאלה אם הן שוות פתוחה.</p>
+<ul>
+<li><b>בעיית הכרעה</b>: בעיה שהתשובה עליה היא כן או לא. כל המחלקות האלה מוגדרות על בעיות כאלה.</li>
+<li><b>זמני ריצה מהתרגול</b>: קבוע, לינארי (n), פולינומיאלי (n בחזקת קבוע), ואקספוננציאלי (קבוע בחזקת n).</li>
+<li><b>בעיה NP־קשה לא חייבת להיות ב־NP</b>. למשל, בעיית העצירה היא NP־קשה, אבל היא בכלל לא כריעה.</li>
+</ul>
+<h3>עץ הרדוקציות מהתרגול</h3>
+<p>CNF-SAT היא הבעיה הראשונה, וכל בעיה ב־NP ניתנת לרדוקציה אליה (משפט קוק). משם מתקבלות כל השאר:</p>
+<div class="eq">CNF-SAT → <bdi>3-CNF-SAT</bdi> → { CLIQUE , IS , <bdi>K-COLOR</bdi> }
+CLIQUE → VERTEX COVER → TSP</div>
+<h3>מההרצאה (מצגות 11 ו־12)</h3>
+<ul>
+<li><b>אימות</b>: בהינתן "תעודה" (פתרון מוצע), בודקים בזמן פולינומיאלי שהיא נכונה. דוגמאות מהשקף: בכיסוי קודקודים ובצביעה עוברים על כל הקשתות, ובקליקה עוברים על כל זוגות הקודקודים בה.</li>
+<li><b>בעיות הכרעה ובעיות אופטימיזציה</b>: תורת ה־NPC עוסקת בבעיות הכרעה (כן או לא). הן לא קשות יותר מבעיות האופטימיזציה המתאימות, וגם לא קלות יותר.</li>
+<li><b>אם בעיה NPC אחת פתירה בזמן פולינומיאלי</b>, אז P שווה ל־NP. בלשון השקף, החסם העליון עולה לכל NP.</li>
+<li><b>אם בעיה אחת ב־NP לא פתירה בזמן פולינומיאלי</b>, אז אף בעיה NPC לא פתירה בזמן פולינומיאלי. החסם התחתון יורד.</li>
+<li><b>הרכבה</b>: רדוקציה בזמן n בחזקת k ואלגוריתם בזמן n בחזקת q נותנים ביחד זמן פולינומיאלי.</li>
+</ul>
+<h3>רדוקציה: הכיוון הוא הכול</h3>
+<p>רדוקציה פולינומיאלית מ־A ל־B היא פונקציה שרצה בזמן פולינומיאלי, הופכת כל קלט של A לקלט של B, ושומרת על התשובה: כן אם ורק אם כן.</p>
+<p>לפי ההרצאה, <b>החסם התחתון הולך עם כיוון הרדוקציה, והחסם העליון הולך נגדו</b>. בשקף אחד במצגת 11 כתוב ש־A קשה לפחות כמו B, אבל שאר השקפים (וגם מצגת 12, שכותבת שהקלה מצטמצמת לקשה) אומרים את ההפך. הנכון הוא הכלל שכאן.</p>
+<div class="box tip"><b>משפט אחד לזכור</b>רדוקציה מ־A ל־B פירושה ש־B קשה <b>לפחות</b> כמו A. אם B קלה (ב־P) אז גם A קלה. אם A קשה (NPC) ו־B ב־NP, אז גם B היא NPC.</div>
+</article>
+
+<!-- TF -->
+<article class="ch" id="c-tf">
+<h2>שאלה 2: נכון או לא נכון<span class="points">5 נקודות</span></h2>
+<p class="lead">כל תשובה שגויה מורידה נקודה. אלה הכללים שפותרים כמעט כל סעיף.</p>
+<div class="box tpl"><b>כללי הכרעה</b><ol>
+<li>כל בעיה ב־NP ניתנת לרדוקציה לכל בעיה NPC, ולכל בעיה NP־קשה. זה <b>בהכרח</b> נכון.</li>
+<li>רדוקציה מבעיה NPC לבעיה ב־P גוררת ש־P שווה ל־NP.</li>
+<li>אם בעיה NPC נמצאת ב־P, אז P שווה ל־NP.</li>
+<li>רדוקציה <b>מ־</b>בעיה ב־P לבעיה כלשהי לא אומרת כלום על הבעיה השנייה.</li>
+<li>רדוקציה <b>אל</b> בעיה ב־P אומרת שגם הבעיה הראשונה ב־P.</li>
+<li>שרשור של רדוקציות הוא רדוקציה. בודקים לאן אפשר להגיע מבעיה NPC.</li>
+<li>חסם תחתון אקספוננציאלי לבעיה כלשהי ב־NP גורר שהמחלקות שונות, וגם שלכל בעיה NPC יש חסם תחתון על־פולינומיאלי. לבעיה אחרת ב־NP הוא <b>לא</b> מעביר חסם, כי היא אולי ב־P.</li>
+<li>"ייתכן ש..." נכון אם יש עולם אחד (P שווה ל־NP או לא) שבו זה מתקיים.</li>
+<li>לכל בעיה ב־NP, כולל NPC, אפשר לאמת פתרון בזמן פולינומיאלי. זה חלק מההגדרה.</li>
+<li><b>חסם מדויק לא עובר ברדוקציה.</b> רדוקציה פולינומיאלית יכולה להגדיל את הקלט. לכן "חסם תחתון של n בחזקת 4 ל־3-CNF-SAT גורר את אותו חסם לכל בעיה NPC" הוא <b>לא נכון</b>. כך הסביר המתרגל בתרגול החזרה.</li>
+<li>רדוקציה "לינארית" או "כלשהי" (לא פולינומיאלית) אינה הרדוקציה מההגדרה. קראו את הניסוח בזהירות.</li>
+</ol></div>
+<p>בלשונית התרגול יש בנק של קביעות אמיתיות מהמבחנים, עם הסבר לכל אחת.</p>
+<div class="box warn"><b>זהירות עם הפתרונות הרשמיים</b>המתרגל אמר שלא לסמוך במאה אחוז על התשובות הרשמיות לשאלות הנכון או לא נכון, כי היו בהן טעויות. אם תשובה רשמית סותרת את הכללים כאן, תחשבו לבד.</div>
+</article>
+
+<!-- RED -->
+<article class="ch" id="c-red">
+<h2>שאלה 1: הוכחה שבעיה היא NPC<span class="points">26 נקודות</span></h2>
+<p class="lead">הניקוד ניתן על ארבעה חלקים. כתבו את כולם, גם אם הם נראים מובנים מאליהם.</p>
+<div class="box tpl"><b>תבנית התשובה</b><ol>
+<li><b>הבעיה ב־NP</b>: בהינתן פתרון מוצע (עד), מתארים איך מאמתים אותו ובאיזה זמן. למשל, בודקים את הגודל ועוברים על כל הקשתות.</li>
+<li><b>טרנספורמציה</b>: "נבצע רדוקציה מבעיה מוכרת X שהיא NPC". בהינתן מופע של X, בונים במפורש מופע של הבעיה החדשה, כולל הפרמטר (למשל k).</li>
+<li><b>נכונות בשני הכיוונים</b>. כיוון ראשון: אם למופע של X יש תשובה חיובית, גם למופע החדש יש. כיוון שני: אם למופע החדש יש תשובה חיובית, גם ל־X יש.</li>
+<li><b>זמן פולינומיאלי</b>: כמה זמן לוקחת הבנייה, למשל <bdi class="m">O(|V|·|E|)</bdi>.</li>
+</ol></div>
+<div class="box warn"><b>הטעות הכי יקרה: רדוקציה הפוכה</b>הרדוקציה היא <b>מ</b>הבעיה המוכרת <b>אל</b> הבעיה החדשה. אם הופכים מקלט של הבעיה החדשה לקלט של בעיה מוכרת, זה לא מוכיח כלום.</div>
+<div class="box warn"><b>טעויות נפוצות נוספות מהפתרונות הרשמיים</b><ul>
+<li>בחלק של NP לא בודקים את כל התנאים של הבעיה (למשל שהקליקות זרות, או שהגודל הוא בדיוק k).</li>
+<li>הוכחת נכונות רק בכיוון אחד.</li>
+<li>טרנספורמציה שתלויה בפתרון. הבנייה צריכה להשתמש רק בקלט, לא בתשובה.</li>
+<li>הוספת פרטים מיותרים לטרנספורמציה. בשאלת סיפוק הצלעות נכתב שכל תוספת למינימום נחשבה טעות.</li>
+<li>כשמוסיפים קודקודים חדשים, שוכחים להסביר בכיוון השני מה קורה אם הפתרון משתמש בהם.</li>
+</ul></div>
+<div class="box tip"><b>"חשוב מאוד" (מודגש בשקף של ההרצאה)</b>בטרנספורמציה צריך לכתוב את <b>כל</b> הפרמטרים של הבעיה החדשה כפונקציה של הפרמטרים של הבעיה המוכרת. למשל, אם בבעיה החדשה יש מרצים, קורסים, קשר של "מי מלמד מה" ו־k, צריך להגדיר כל אחד מהם בעזרת V, ‏E ו־k של כיסוי הקודקודים.</div>
+<h3>הדוגמה מההרצאה: בעיית המרצים</h3>
+<p>נתונים P מרצים, M קורסים, רשימה של מי יכול ללמד מה, ומספר K. האם K מרצים יכולים ללמד את כל הקורסים?</p>
+<ul>
+<li><b>תשובה שגויה מהשקף</b>: לבנות גרף דו־צדדי ולפתור בעזרת בעיית זיווג. זו רדוקציה בכיוון ההפוך, והיא מביאה רק חסם עליון.</li>
+<li><b>התשובה הנכונה</b>: רדוקציה מכיסוי קודקודים. כל קודקוד הופך למרצה, כל קשת הופכת לקורס, ומרצה מלמד את הקורסים של הקשתות שנוגעות בו. ה־K נשאר.</li>
+<li><b>נכונות</b>: כיסוי בגודל K הוא בדיוק K מרצים שמלמדים את כל הקורסים, ולהפך. יוצאת "אוניברסיטה מוזרה" שבה כל קורס יכול ללמד בדיוק שני מרצים, וזה מקרה פרטי של הבעיה.</li>
+</ul>
+<h3>דוגמה לתשובה מלאה</h3>
+<p>הבעיה ממועד ב׳ 2018: בהינתן גרפים G ו־H, האם יש ב־G תת־גרף שאיזומורפי ל־H?</p>
+<ol>
+<li><b>ב־NP</b>: העד הוא פונקציה מקודקודי H לקודקודי G. בודקים שהיא חד־חד־ערכית, ושלכל זוג קודקודים ב־H יש קשת אם ורק אם יש קשת בין התמונות שלהם. הזמן ריבועי.</li>
+<li><b>רדוקציה מקליקה</b>: בהינתן גרף G ומספר k, בונים את H כקליקה על k קודקודים. מעבירים את G ואת H.</li>
+<li><b>כיוון ראשון</b>: אם ב־G יש קליקה בגודל k, היא איזומורפית ל־H.</li>
+<li><b>כיוון שני</b>: תת־גרף של G שאיזומורפי ל־H הוא k קודקודים שכל שניים מהם מחוברים, כלומר קליקה בגודל k.</li>
+<li><b>זמן</b>: בניית H לוקחת זמן ריבועי ב־k.</li>
+</ol>
+<div class="box tip"><b>"בגודל k בדיוק" או "לכל היותר k"</b>ברוב הבעיות זה לא משנה: לכיסוי קודקודים קטן מ־k אפשר להוסיף קודקודים, ומקליקה גדולה אפשר לקחת תת־קבוצה. אם הבעיה החדשה דורשת "בדיוק", כתבו משפט אחד על זה בכיוון השני.</div>
+<h3>הבעיות המוכרות</h3>
+<p>לפי הקבוצה, הבעיות שהמרצה הוכיח בהרצאה שהן NPC הן: SAT, <bdi>3-CNF-SAT</bdi>, קליקה, קבוצה בלתי תלויה, כיסוי קודקודים, <bdi>K-COLOR</bdi> (לכל K גדול או שווה ל־3) וסכום תת־קבוצה. אלה המקורות הבטוחים לרדוקציה. בחומר המשלים הופיעו גם מעגל המילטון והסוכן הנוסע.</p>
+<div class="tbl"><table>
+<tr><th>בעיה</th><th>קלט</th><th>שאלה</th></tr>
+<tr><td>SAT</td><td>נוסחה בוליאנית</td><td>האם יש השמה מספקת?</td></tr>
+<tr><td><bdi>3-CNF-SAT</bdi></td><td>נוסחה שהיא גימום של פסוקיות, בכל פסוקית שלושה ליטרלים</td><td>האם יש השמה מספקת?</td></tr>
+<tr><td>קליקה (Clique)</td><td>גרף ומספר k</td><td>האם יש k קודקודים שכולם מחוברים זה לזה?</td></tr>
+<tr><td>קבוצה בלתי תלויה (IS)</td><td>גרף ומספר k</td><td>האם יש k קודקודים שאין קשת בין אף שניים מהם?</td></tr>
+<tr><td>כיסוי קודקודים (VC)</td><td>גרף ומספר k</td><td>האם יש k קודקודים כך שלכל קשת לפחות קצה אחד בקבוצה?</td></tr>
+<tr><td><bdi>3-COLOR</bdi></td><td>גרף</td><td>האם אפשר לצבוע ב־3 צבעים בלי ששני שכנים יקבלו אותו צבע?</td></tr>
+<tr><td>סכום תת־קבוצה (Subset-Sum)</td><td>קבוצת מספרים ויעד T</td><td>האם יש תת־קבוצה שסכומה בדיוק T?</td></tr>
+<tr><td><bdi>K-COLOR</bdi></td><td>גרף ומספר K</td><td>האם אפשר לצבוע ב־K צבעים בלי ששני שכנים יקבלו אותו צבע?</td></tr>
+<tr><td>מעגל המילטון, סוכן נוסע (TSP)</td><td>גרף (ממושקל), ובסוכן הנוסע גם מספר K</td><td>האם יש מעגל שעובר בכל קודקוד פעם אחת (במשקל K)?</td></tr>
+<tr><td>חלוקת מספרים</td><td>קבוצת מספרים (ובתרגול גם מספר k)</td><td>האם אפשר לחלק לשתי קבוצות שסכומיהן שווים (או שההפרש ביניהם k)?</td></tr>
+</table></div>
+<h3>מאיזו בעיה לעשות רדוקציה?</h3>
+<div class="tbl"><table>
+<tr><th>אם בבעיה החדשה...</th><th>כדאי להתחיל מ־</th></tr>
+<tr><td>בוחרים k פריטים ש"מכסים" את הכול (קבוצות, שורות, מספרים)</td><td>VC. קודקודים הופכים לפריטים וקשתות הופכות למה שצריך לכסות. כך נפתרו GS, ‏BHS, ‏OTT וסיפוק הצלעות</td></tr>
+<tr><td>בוחרים k פריטים בלי "התנגשויות" בזוגות</td><td>IS או קליקה. כך נפתרה שאלת גן החיות: קשת חסרה הופכת לאיסור</td></tr>
+<tr><td>יש בחירה אחת מכל קבוצה, ו"סתירות" בין בחירות</td><td>3-CNF-SAT. כל פסוקית הופכת לשורה, וליטרל ושלילתו הופכים לסתירה. כך נפתרו הצפרדע, המפסקים ו־NS</td></tr>
+<tr><td>צביעה, חלוקה לקבוצות</td><td><bdi>3-COLOR</bdi></td></tr>
+<tr><td>הבעיה המוכרת היא מקרה פרטי של החדשה</td><td>הבעיה עצמה, עם טרנספורמציה פשוטה (למשל S=V, כך נפתרה שאלת הסוכן הבררן)</td></tr>
+</table></div>
+<div class="box tip"><b>קיצורים שמותר להשתמש בהם</b>הקשר בין שלוש בעיות הגרף: קבוצה S היא בלתי תלויה אם ורק אם המשלים שלה הוא כיסוי קודקודים. S בלתי תלויה בגרף אם ורק אם היא קליקה בגרף המשלים.</div>
+</article>
+
+<!-- CLASSIC -->
+<article class="ch" id="c-classic">
+<h2>רדוקציות מהשקפים<span class="points">שאלות בחירה</span></h2>
+<p class="lead">בשנת 2026 שאלות הבחירה ביקשו הוכחות "כפי שרשום בשקפים". כל ההוכחות כאן כתובות לפי מצגות 11 ו־12. בכל אחת יש חמישה שלבים: ב־NP, בחירת בעיה מוכרת, טרנספורמציה, נכונות בשני הכיוונים וזמן פולינומיאלי.</p>
+
+<h3>מ־<bdi>3-COLOR</bdi> ל־<bdi>K-COLOR</bdi></h3>
+<p><b>בשקף (שאלה ממבחן 2007)</b> ההוכחה היא ל־<bdi>4-COLOR</bdi>: מעתיקים את G ומוסיפים קודקוד חדש אחד V שמחובר לכל הקודקודים. אם G צביע ב־3 צבעים, צובעים את V בצבע רביעי. אם הגרף החדש צביע ב־4 צבעים, אף קודקוד של G לא באותו צבע כמו V, ולכן G צבוע ב־3 הצבעים הנותרים.</p>
+<p>השקף שואל אם אותה רדוקציה עובדת גם ל־K גדול מ־4. התשובה: לא, קודקוד אחד לא מספיק. צריך להוסיף קליקה בגודל <bdi class="m">K−3</bdi> ולחבר כל קודקוד שלה לכל קודקודי G. זה הפתרון הרשמי של מועד ב׳ 2026.</p>
+<ul>
+<li><b>כיוון ראשון</b>: אם G צביע ב־3 צבעים, צובעים את הקליקה ב־<bdi class="m">K−3</bdi> צבעים חדשים. יוצא צביעה חוקית ב־K צבעים.</li>
+<li><b>כיוון שני</b>: בצביעה ב־K צבעים, קודקודי הקליקה תופסים <bdi class="m">K−3</bdi> צבעים שונים, וכל קודקוד של G מחובר לכולם. לכן G צבוע ב־3 הצבעים הנותרים.</li>
+<li><b>זמן</b>: מוסיפים <bdi class="m">O(K·|V|+K²)</bdi> קשתות, כש־K קבוע.</li>
+</ul>
+
+<h3>מ־<bdi>3-CNF-SAT</bdi> ל־<bdi>3-COLOR</bdi></h3>
+<p><b>ב־NP</b>: בהינתן צביעה, עוברים על כל הקשתות ובודקים ששני הקצוות בצבעים שונים. הזמן ריבועי במספר הקודקודים.</p>
+<p><b>טרנספורמציה (מצגת 12)</b>: שימו לב שהטרנספורמציה היא מהנוסחה אל הגרף.</p>
+<ul>
+<li><b>משולש בסיס</b>: שלושה קודקודים T, ‏F ו־A, מחוברים זה לזה.</li>
+<li><b>לכל פסוקית</b> בונים 9 קודקודים: שלושה <b>קודקודי חוץ</b> (אחד לכל ליטרל), שלושה <b>קודקודי אמצע</b>, ו<b>משולש פנימי</b> של שלושה קודקודים. כל קודקוד חוץ מחובר לקודקוד האמצע שלו, וכל קודקוד אמצע מחובר לקודקוד אחד במשולש הפנימי.</li>
+<li><b>A מחובר לכל קודקודי החוץ</b>, ולכן הם יכולים להיות רק T או F.</li>
+<li><b>T מחובר לכל קודקודי האמצע</b>, ולכן הם יכולים להיות רק F או A.</li>
+<li><b>ליטרל ושלילתו</b>: קודקודי חוץ בפסוקיות שונות שהם ליטרל ושלילתו מחוברים בקשת.</li>
+</ul>
+<figure class="fig">
+<svg viewBox="0 0 560 300" width="560" role="img" aria-label="הגאדג׳ט של פסוקית ברדוקציה ל־3-COLOR">
+<g font-family="IBM Plex Mono,monospace" font-size="13" text-anchor="middle">
+<line x1="60" y1="70" x2="60" y2="230" stroke="var(--ink)" stroke-width="1.6"/><line x1="60" y1="70" x2="140" y2="150" stroke="var(--ink)" stroke-width="1.6"/><line x1="60" y1="230" x2="140" y2="150" stroke="var(--ink)" stroke-width="1.6"/>
+<g stroke="var(--accent)" stroke-width="1.3" stroke-dasharray="5 4" fill="none"><path d="M60,70 C200,40 230,150 290,160"/><path d="M60,70 C220,30 330,130 390,160"/><path d="M60,70 C240,20 430,120 490,160"/></g>
+<g stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="2 4" fill="none"><path d="M140,150 C200,260 250,260 290,255"/><path d="M140,150 C230,290 340,280 390,255"/><path d="M140,150 C260,300 450,290 490,255"/></g>
+<line x1="290" y1="60" x2="390" y2="60" stroke="var(--ink)" stroke-width="1.6"/><line x1="390" y1="60" x2="490" y2="60" stroke="var(--ink)" stroke-width="1.6"/><path d="M290,60 C330,10 450,10 490,60" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+<g stroke="var(--ink)" stroke-width="1.6"><line x1="290" y1="60" x2="290" y2="160"/><line x1="390" y1="60" x2="390" y2="160"/><line x1="490" y1="60" x2="490" y2="160"/><line x1="290" y1="160" x2="290" y2="255"/><line x1="390" y1="160" x2="390" y2="255"/><line x1="490" y1="160" x2="490" y2="255"/></g>
+<g fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"><circle cx="60" cy="70" r="17"/><circle cx="60" cy="230" r="17"/><circle cx="140" cy="150" r="17"/>
+<circle cx="290" cy="60" r="15"/><circle cx="390" cy="60" r="15"/><circle cx="490" cy="60" r="15"/><circle cx="290" cy="160" r="15"/><circle cx="390" cy="160" r="15"/><circle cx="490" cy="160" r="15"/></g>
+<g fill="var(--mark)" stroke="var(--ink)" stroke-width="1.6"><circle cx="290" cy="255" r="17"/><circle cx="390" cy="255" r="17"/><circle cx="490" cy="255" r="17"/></g>
+<g fill="var(--ink)"><text x="60" y="75">T</text><text x="60" y="235">F</text><text x="140" y="155">A</text><text x="290" y="64">i1</text><text x="390" y="64">i2</text><text x="490" y="64">i3</text><text x="290" y="164">m1</text><text x="390" y="164">m2</text><text x="490" y="164">m3</text></g>
+<g fill="var(--mark-ink)"><text x="290" y="260">l1</text><text x="390" y="260">l2</text><text x="490" y="260">l3</text></g>
+<g fill="var(--muted)" font-size="12"><text x="545" y="64" text-anchor="end">inner</text><text x="545" y="140" text-anchor="end">middle</text><text x="545" y="292" text-anchor="end">out</text></g>
+</g></svg>
+<figcaption>פסוקית אחת. קו מקווקו כחול: T מחובר לכל קודקודי האמצע. קו מנוקד אפור: A מחובר לכל קודקודי החוץ</figcaption>
+</figure>
+<ul>
+<li><b>כיוון ראשון (צביעה נותנת השמה)</b>: צובעים את משולש הבסיס ב־T, ‏F ו־A. קודקודי החוץ הם T או F. נניח שבפסוקית כל שלושת קודקודי החוץ הם F. אז כל קודקודי האמצע מחוברים ל־F ול־T, ולכן כולם A. כל קודקודי המשולש הפנימי מחוברים לקודקוד A, ונשארים להם רק שני צבעים. אי אפשר לצבוע משולש בשני צבעים, וזו סתירה. לכן בכל פסוקית יש קודקוד חוץ T, ונותנים לליטרל שלו אמת. קשתות השלילה מבטיחות שלא ניתן אמת גם לליטרל וגם לשלילה שלו.</li>
+<li><b>כיוון שני (השמה נותנת צביעה)</b>: צובעים את קודקודי החוץ לפי ההשמה, T או F. בכל פסוקית יש לפחות T אחד. בשקף יש שלושה מקרים לצביעת האמצע והמשולש הפנימי: שלושה T, שני T ו־T אחד. למשל ב־T אחד (בליטרל הראשון): הקודקודים m2 ו־m3 חייבים להיות A, ולכן i2 ו־i3 מקבלים T ו־F. הקודקוד i1 מקבל A, ו־m1 מקבל F.</li>
+<li><b>זמן</b>: 9 קודקודים לכל פסוקית ועוד 3 לבסיס. מספר הקשתות לכל היותר ריבועי.</li>
+</ul>
+<h3>מ־<bdi>3-CNF-SAT</bdi> לקליקה (מצגת 12, חמשת השלבים)</h3>
+<ul>
+<li><b>ב־NP</b>: בהינתן k קודקודים, עוברים על כל הזוגות ובודקים שיש קשת.</li>
+<li><b>טרנספורמציה</b>: לכל פסוקית שלושה קודקודים, אחד לכל ליטרל. מחברים שני קודקודים אם הם בפסוקיות שונות <b>וגם</b> אינם ליטרל ושלילתו. הפרמטר הוא מספר הפסוקיות.</li>
+<li><b>כיוון ראשון</b>: השמה מספקת נותנת ליטרל אמת בכל פסוקית. שני ליטרלים שהם אמת לא יכולים להיות ליטרל ושלילתו, ולכן כולם מחוברים. זו קליקה בגודל מספר הפסוקיות.</li>
+<li><b>כיוון שני</b>: קליקה בגודל מספר הפסוקיות מכילה בדיוק קודקוד אחד מכל פסוקית, כי אין קשתות בתוך פסוקית. נותנים לליטרלים שלה אמת. אין סתירה, כי ליטרל ושלילתו לא מחוברים.</li>
+<li><b>זמן</b>: 3 קודקודים לכל פסוקית, ולכל היותר ריבוע של מספר הקודקודים קשתות.</li>
+</ul>
+
+<h3>מ־<bdi>3-CNF-SAT</bdi> לסכום תת־קבוצה</h3>
+<p><b>שתי הנחות מהשקף</b>: אין פסוקית שמכילה ליטרל ואת השלילה שלו, וכל משתנה מופיע לפחות בפסוקית אחת.</p>
+<p>לכל משתנה ולכל פסוקית יש ספרה עשרונית. לכל משתנה שני מספרים: אחד לליטרל החיובי ואחד לשלילה. בכל מספר יש 1 בספרה של המשתנה, ו־1 בכל ספרה של פסוקית שהליטרל הזה מופיע בה. לכל פסוקית שני מספרי ריפוד (slack) עם 1 ועם 2 בספרה שלה. היעד הוא:</p>
+<div class="eq">T = 111…1 444…4      (1 per variable digit, 4 per clause digit)</div>
+<p>עמודה של פסוקית מקבלת בין 1 ל־3 מהליטרלים שהם אמת, ומספרי הריפוד (1, 2 או שניהם) משלימים אותה ל־4. אם אף ליטרל לא אמת, המקסימום הוא 3 ואי אפשר להגיע ל־4. הסכום בכל עמודה הוא 6 לכל היותר, ולכן אין נשא בין ספרות.</p>
+<ul>
+<li><b>ב־NP</b>: העד הוא תת־קבוצה. סוכמים ומשווים ל־T.</li>
+<li><b>כיוון ראשון</b>: בהינתן השמה מספקת, לכל משתנה בוחרים את המספר של הליטרל שהוא אמת. כך בכל ספרת משתנה יוצא בדיוק 1, ובכל ספרת פסוקית בין 1 ל־3. משלימים ל־4 עם מספרי הריפוד.</li>
+<li><b>כיוון שני</b>: בגלל שאין נשא, כל ספרה נבדקת בנפרד. ספרת משתנה שווה 1, ולכן נבחר בדיוק אחד מ־x ו־¬x, וזו השמה. ספרת פסוקית שווה 4, ומספרי הריפוד תורמים לכל היותר 3, ולכן לפחות ליטרל אחד בפסוקית הוא אמת.</li>
+<li><b>זמן</b>: יש מספר פולינומיאלי של מספרים, כל אחד עם מספר ספרות שווה למספר המשתנים ועוד מספר הפסוקיות.</li>
+</ul>
+<div class="box warn"><b>שאלה ממועד א׳ 2026</b>סטודנט שינה את מספרי הריפוד ל־1 ו־3 ואת היעד ל־5. הוא טועה: פסוקית שכל שלושת הליטרלים בה אמת נותנת 3, ואי אפשר להשלים ל־5 רק עם 1 ו־3. עם 1 ו־2 אפשר תמיד להשלים ל־4.</div>
+
+<h3>רדוקציות מהתרגולים ומהעבודות</h3>
+<div class="tbl"><table>
+<tr><th>הבעיה החדשה</th><th>מאיזו בעיה</th><th>הטרנספורמציה</th></tr>
+<tr><td><bdi>3-CNF-SAT</bdi></td><td><bdi>CNF-SAT</bdi></td><td>פסוקית עם פחות משלושה ליטרלים: משכפלים ליטרל. פסוקית ארוכה: שוברים לשרשרת עם משתני עזר (ראו את הדוגמה מתחת לטבלה)</td></tr>
+<tr><td><bdi>4-CNF-SAT</bdi></td><td><bdi>3-CNF-SAT</bdi></td><td>משכפלים ליטרל אחד בכל פסוקית</td></tr>
+<tr><td>השמה כפולה (שני ליטרלים אמת בכל פסוקית)</td><td><bdi>3-CNF-SAT</bdi></td><td>כותבים כל ליטרל פעמיים, כך שליטרל אמת אחד נספר פעמיים</td></tr>
+<tr><td>כיסוי בקליקות (k קליקות זרות שמכסות הכול)</td><td><bdi>K-COLOR</bdi></td><td>הגרף המשלים עם אותו k. כל קבוצת צבע היא קבוצה בלתי תלויה, ולכן קליקה במשלים</td></tr>
+<tr><td>אריזת קבוצות (k קבוצות זרות)</td><td>IS</td><td>ממספרים את הקשתות. כל קודקוד הופך לקבוצת מספרי הקשתות שלו. קודקודים לא שכנים הם קבוצות זרות</td></tr>
+<tr><td>תכנות לינארי בשלמים</td><td><bdi>3-CNF-SAT</bdi></td><td>לכל משתנה x מוסיפים משתנה לשלילה, והסכום של שניהם הוא 1. כל פסוקית הופכת לאילוץ שסכום הליטרלים שלה לפחות 1</td></tr>
+<tr><td>תת־גרף עם x קודקודים ולפחות y קשתות</td><td>קליקה</td><td>אותו גרף. x הוא k, ו־y הוא מספר הקשתות בקליקה בגודל k</td></tr>
+<tr><td>i קליקות זרות בגודל k</td><td>קליקה</td><td>אותו גרף ואותו k, עם i=1</td></tr>
+<tr><td>חלוקה של גרף דו־צדדי ישר למשקלים שווים</td><td>חלוקת מספרים</td><td>כל מספר הופך לקודקוד עם המשקל שלו, מחובר לקודקוד חדש במשקל 0. מוסיפים גם קודקוד במשקל k</td></tr>
+</table></div>
+<p>הפירוק של פסוקית ארוכה מתרגול 9. פסוקית עם k ליטרלים צריכה <bdi class="m">k−3</bdi> משתני עזר:</p>
+<div class="eq">(x1 ∨ x2 ∨ x3 ∨ x4)  →  (x1 ∨ x2 ∨ p) ∧ (¬p ∨ x3 ∨ x4)
+(x1 ∨ … ∨ xk)  →  (x1 ∨ x2 ∨ p1) ∧ (¬p1 ∨ x3 ∨ p2) ∧ … ∧ (¬p(k−3) ∨ x(k−1) ∨ xk)</div>
+<p>אם אחד הליטרלים המקוריים אמת, בוחרים את משתני העזר כך שכל שאר הפסוקיות יסתפקו. אם כולם שקר, השרשרת מאלצת סתירה. בשקף בתרגול האינדקס של משתנה העזר האחרון כתוב עם טעות של אחד. הנכון הוא <bdi class="m">k−3</bdi>.</p>
+<p>בתרגול 8 הגדירו רדוקציה גם בלי קשר ל־NP: אם אפשר לפתור את A בעזרת B, אז החסם העליון של B הוא חסם עליון ל־A, והחסם התחתון של A הוא חסם תחתון ל־B. הדוגמה: בחירת האיבר ה־i בגודלו אינה קשה יותר ממיון.</p>
+
+<h3>חומר משלים מסוף מצגת 12</h3>
+<p>לפי הקבוצה, החומר המשלים (שלא נלמד בכיתה) נכלל במבחן.</p>
+<ul>
+<li><b>מעגל המילטון לסוכן הנוסע</b>: בונים גרף שלם על אותם קודקודים. קשת שהייתה בגרף המקורי מקבלת מחיר 0, וכל קשת אחרת מקבלת 1. שואלים אם יש סיור שמחירו לכל היותר 0. סיור כזה משתמש רק בקשתות מקוריות, ולכן הוא מעגל המילטון, ולהפך. הסוכן הנוסע ב־NP: בודקים שכל קודקוד מופיע פעם אחת וסוכמים את המחיר.</li>
+<li><b>SAT היא NPC</b> (משפט קוק, רק רעיון ההוכחה): כל בעיה ב־NP ניתנת לאימות בזמן פולינומיאלי, ולכן אפשר לתרגם את תהליך האימות למעגל בוליאני בגודל פולינומיאלי. למעגל יש השמה מספקת אם ורק אם יש תעודה נכונה.</li>
+</ul>
+<h3>קליקה, קבוצה בלתי תלויה וכיסוי קודקודים</h3>
+<ul>
+<li><b>מקליקה ל־IS</b>: אותו k, בגרף המשלים.</li>
+<li><b>מ־IS ל־VC</b>: אותו גרף, והפרמטר הופך ל־<bdi class="m">|V|−k</bdi>.</li>
+<li><b>מקליקה ל־VC</b> (ההוכחה המלאה במצגת 11): הגרף המשלים והפרמטר <bdi class="m">|V|−k</bdi>. אם C קליקה ב־G, אז בגרף המשלים אין קשת בין שני קודקודים של C, ולכן כל קשת נוגעת בקודקוד מחוץ ל־C. כלומר, שאר הקודקודים הם כיסוי.</li>
+<li><b>מ־<bdi>3-CNF-SAT</bdi> לקליקה</b>: קודקוד לכל ליטרל בכל פסוקית. מחברים שני קודקודים אם הם מפסוקיות שונות ואינם ליטרל ושלילתו. מחפשים קליקה בגודל מספר הפסוקיות.</li>
+</ul>
+</article>
+<!-- CFG -->
+<article class="ch" id="c-cfg">
+<h2>דקדוקים חסרי הקשר ואוטומט מחסנית<span class="points">לא בחומר השנה</span></h2>
+<div class="box warn"><b>לפי קבוצת הוואטסאפ: הנושא ירד מהחומר</b>כמה סטודנטים כתבו ביולי 2026 ש"אוטומט מחסנית לא יהיה במבחן" ושדקדוקים חסרי הקשר "לא בחומר השנה". גם במבחני 2026 לא הופיעה שאלה כזו. הפרק נשאר כאן רק לרקע, ואפשר לדלג עליו.</div>
+<h3>דקדוק חסר הקשר</h3>
+<p>כללי גזירה שבצד שמאל שלהם יש משתנה אחד. דקדוק בסיסי לשפה <bdi class="m">a<sup>n</sup>b<sup>n</sup></bdi>:</p>
+<div class="eq">S → aSb | λ</div>
+<ul>
+<li><b>איחוד</b>: כלל פתיחה שבוחר בין שני הדקדוקים.</li>
+<li><b>ספירה של יחס</b>: בכל גזירה מוסיפים את הכמויות לפי היחס. כשצריך פי 2 b מ־a, כל a מלווה בשני b, בכל סדר.</li>
+<li><b>שפה רגולרית</b>: לכל מצב באוטומט יש משתנה. מעבר באות מהמצב A למצב B הופך לכלל שבו A גוזר את האות ואחריה B. מצב מקבל גוזר גם λ.</li>
+</ul>
+<div class="box tip"><b>שאלה נפוצה: מהי השפה של הדקדוק?</b>גוזרים כמה מילים קצרות, ומחפשים מה כל משתנה "זוכר". במבחנים הופיעו דקדוקים שכל משתנה בהם הוא מצב של זוגיות. למשל, בדקדוק ממועד ב׳ 2017 השפה היא מספר זוגי של a ומספר אי־זוגי של b. כתבו את התשובה בכתיב מתמטי מדויק.</div>
+<h3>היררכיית השפות</h3>
+<p>כל שפה רגולרית היא חסרת הקשר, וכל שפה חסרת הקשר מתקבלת במכונת טיורינג. ההכלות האלה ממש חזקות: יש שפה חסרת הקשר שאינה רגולרית, ויש שפה של מכונת טיורינג שאינה חסרת הקשר.</p>
+<div class="tbl"><table>
+<tr><th>משפחה</th><th>מודל</th><th>דוגמה שאינה במשפחה הקודמת</th></tr>
+<tr><td>רגולריות</td><td>DFA, ‏NFA, ביטוי רגולרי</td><td>למשל <bdi class="m">a*b</bdi></td></tr>
+<tr><td>חסרות הקשר</td><td>דקדוק, אוטומט מחסנית אי־דטרמיניסטי</td><td>שפה של a ו־b בכמויות שוות, פלינדרום</td></tr>
+<tr><td>של מכונת טיורינג</td><td>מכונת טיורינג</td><td>שלוש אותיות בכמויות שוות, מילה שחוזרת פעמיים (ww)</td></tr>
+</table></div>
+<p>קביעות נכון או לא נכון ממועד ב׳ 2014:</p>
+<ul>
+<li>DFA יכול לקבל חלק מהשפות חסרות ההקשר (את הרגולריות) אבל לא את כולן. <b>נכון</b>.</li>
+<li>אוטומט מחסנית <b>דטרמיניסטי</b> מקבל את כל השפות חסרות ההקשר. <b>לא נכון</b>, למשל פלינדרום.</li>
+<li>מכונת טיורינג פותרת כל בעיית הכרעה. <b>לא נכון</b>, למשל בעיית העצירה.</li>
+<li>יש שפה רגולרית שאינה חסרת הקשר. <b>לא נכון</b>.</li>
+<li>בכל DFA חייב להיות לפחות מעגל אחד. <b>נכון</b>. בכל מצב יש מעבר לכל אות ומספר המצבים סופי, ולכן בקריאה ארוכה מספיק חוזרים למצב שכבר ביקרנו בו. גם לולאה עצמית, כמו במלכודת, היא מעגל. לא מצאתי פתרון רשמי לסעיף הזה, זה הנימוק לפי הגדרת DFA בקורס.</li>
+</ul>
+<h3>דקדוק דו־משמעי</h3>
+<p>דקדוק הוא דו־משמעי אם יש מילה שיש לה שני עצי גזירה שונים (או שתי גזירות שמאליות שונות). הדוגמה מההרצאה:</p>
+<div class="eq">E → E+E | E*E | (E) | a          ← ambiguous: a+a*a has 2 parse trees
+E → E+T | T ,  T → T*F | F ,  F → (E) | a          ← not ambiguous</div>
+<h3>אוטומט מחסנית</h3>
+<p>אוטומט סופי עם מחסנית. מעבר נכתב כך: אות קלט, מה שולפים מהמחסנית, מה דוחפים. בשפה <bdi class="m">a<sup>n</sup>b<sup>n</sup></bdi> דוחפים סימן על כל a, שולפים סימן על כל b, ומקבלים כשהמחסנית חוזרת לסימן התחתון.</p>
+</article>
+</main>
+</div>
+</div>
+
+<!-- ===================== PRACTICE ===================== -->
+<div id="p-prac" class="panel" hidden>
+<div class="pwrap">
+<section class="sec" id="s-tf">
+  <h2>שאלה 2: נכון או לא נכון</h2>
+  <p class="lead">כל הקביעות לקוחות ממבחנים אמיתיים. נקודה על תשובה נכונה, מינוס נקודה על שגויה, כמו במבחן.</p>
+  <div class="actions"><span>ניקוד: <span class="score" id="tfScore">0</span> מתוך <span id="tfDone">0</span> שנענו</span><button class="btn ghost" id="tfReset">איפוס</button></div>
+  <div id="tfList"></div>
+</section>
+
+<section class="sec" id="s-reg">
+  <h2>רגולרית או לא? תרגול מהיר</h2>
+  <p class="lead">החליטו לפני שכותבים הוכחה. זה הצעד הראשון בשאלה 3.</p>
+  <div id="regList"></div>
+</section>
+
+<section class="sec" id="s-q">
+  <h2>שאלות מבחן מלאות</h2>
+  <p class="lead">כתבו תשובה, ואז השוו לפתרון או בקשו מ־Claude לבדוק אותה.</p>
+  <div class="filters" id="qFilters"></div>
+  <div id="qList"></div>
+</section>
+</div>
+</div>
+
+<!-- ===================== ASK ===================== -->
+<div id="p-ask" class="panel" hidden>
+<div class="ask">
+  <div class="chat">
+    <div class="log" id="log"><p class="empty" id="emptyMsg">שאלו כל שאלה על החומר. התשובות מותאמות לקורס ולמבנה המבחן.</p></div>
+    <label for="askBox" class="note">השאלה שלך</label>
+    <textarea id="askBox" placeholder="למשל: למה בלמת הניפוח בוחרים מילה שמתחילה ב־a בחזקת m?"></textarea>
+    <div class="actions">
+      <button class="btn" id="askBtn">שליחה</button>
+      <button class="btn ghost" id="stopBtn" hidden>עצירה</button>
+      <button class="btn ghost" id="clearBtn">שיחה חדשה</button>
+      <span class="note" id="askNote"></span>
+    </div>
+  </div>
+  <div class="side">
+    <div class="note">שאלות לדוגמה</div>
+    <button data-q="תסביר לי את שיטת תת-הקבוצות להמרת NFA ל-DFA, עם דוגמה קטנה עם מעברי למדא.">המרה מ־NFA ל־DFA עם מעברי למדא</button>
+    <button data-q="תן לי שפה חדשה לתרגול למת הניפוח ברמת מבחן, בלי פתרון. אחרי שאענה תבדוק אותי.">תן לי שפה לתרגול למת הניפוח</button>
+    <button data-q="תן לי 5 קביעות נכון/לא נכון חדשות בסגנון שאלה 2 במבחן, בלי תשובות. אני אענה ואתה תבדוק.">5 קביעות חדשות בסגנון שאלה 2</button>
+    <button data-q="תן לי בעיה חדשה בסגנון שאלה 1 (הוכחת NPC) ברמת מבחן, בלי פתרון. אחרי שאנסה, תבדוק אותי.">בעיה חדשה בסגנון שאלה 1</button>
+    <button data-q="מה ההבדל בין NP-Hard ל-NPC, ולמה רדוקציה מ-A ל-B אומרת ש-B קשה לפחות כמו A?">ההבדל בין NP־קשה ל־NPC</button>
+    <button data-q="איך בונים מכונת טיורינג שמקבלת את השפה a^n b^n? תן פסאודו-קוד ורשימת מעברים.">מכונת טיורינג לשפה של a ו־b שווים</button>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+/* countdown */
+(function(){const exam=new Date(2026,9,8);const now=new Date();const t=new Date(now.getFullYear(),now.getMonth(),now.getDate());const d=Math.round((exam-t)/864e5);
+$('#count').textContent=d>1?`עוד ${d} ימים למבחן`:d===1?'המבחן מחר':d===0?'המבחן היום, בהצלחה!':'המבחן עבר';})();
+
+/* tabs */
+function show(p){$$('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.p===p));$$('.panel').forEach(x=>x.hidden=x.id!=='p-'+p);store.set('tab',p);window.scrollTo(0,0)}
+$$('.tab').forEach(b=>b.onclick=()=>show(b.dataset.p));
+const h=location.hash.replace('#','');show(['study','prac','ask'].includes(h)?h:store.get('tab','study'));
+
+/* plan */
+const PLAN=[
+['27/9','אוטומטים והמרה מ־NFA ל־DFA, כולל סגור־λ'],
+['28/9','ביטויים רגולריים: מביטוי ל־NFA ומ־NFA לביטוי בביטול מצבים'],
+['29/9','בניית אוטומטים לתנאי ספירה ושארית, סגירות'],
+['30/9','למת הניפוח: לשנן את התבנית ולפתור 4 שאלות 3 ממבחנים'],
+['1/10','מחלקות P ו־NP, ובנק שאלות נכון או לא נכון'],
+['2/10','הרדוקציות הבסיסיות: קליקה, IS, ‏VC ו־<bdi>3-CNF-SAT</bdi>'],
+['3/10','שאלה 1 ממבחנים: GS, ‏OTT, הצפרדע, גן החיות'],
+['4/10','הוכחות מהשקפים: <bdi>3-COLOR</bdi>, סכום תת־קבוצה, <bdi>K-COLOR</bdi>'],
+['5/10','מכונות טיורינג, בעיית העצירה ומכונה אוניברסלית '],
+['6/10','מבחן מלא בזמן: מועד א׳ 2026'],
+['7/10','מבחן מלא בזמן: מועד ב׳ 2026, וחזרה על הטעויות'],
+];
+const done=store.get('plan',{});
+$('#plan').innerHTML=PLAN.map((p,i)=>`<li class="${done[i]?'done':''}"><input type="checkbox" id="pl${i}" ${done[i]?'checked':''}><label for="pl${i}" class="d">${p[0]}</label><span>${p[1]}</span></li>`).join('');
+$$('#plan input').forEach((c,i)=>c.onchange=()=>{done[i]=c.checked;store.set('plan',done);c.parentElement.classList.toggle('done',c.checked)});
+
+/* toc highlight */
+const links=$$('#toc a');
+const io=('IntersectionObserver' in window)?new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}})},{rootMargin:'-20% 0px -70% 0px'}):null;
+if(io)$$('article.ch').forEach(a=>io.observe(a));
+
+/* ---------- T/F bank ---------- */
+const M=s=>`<bdi class="m">${s}</bdi>`;
+const TF=[
+{src:'מועד א׳ 2026',ctx:`נתונות ארבע בעיות: ${M('a,b ∈ NP')}, ${M('c ∈ NPC')}, ${M('d ∈ NP-Hard')}`,items:[
+['החסם העליון של a פולינומיאלי אם ורק אם P שווה ל־NP.',0,'לא נכון. ייתכן ש־a בכלל ב־P, ואז החסם שלה פולינומיאלי גם אם המחלקות שונות.'],
+['ייתכן שהחסם העליון של c פולינומיאלי.',1,'נכון. אם P שווה ל־NP, כל בעיה NPC נפתרת בזמן פולינומיאלי.'],
+['בהכרח קיימת רדוקציה פולינומיאלית מ־c ל־d.',1,'נכון. d היא NP־קשה, ולכן כל בעיה ב־NP, כולל c, ניתנת לרדוקציה אליה.'],
+['יכול להיות שקיימת רדוקציה פולינומיאלית מ־d ל־b.',1,'נכון. למשל אם d ב־NP ו־b היא NPC. "יכול להיות" דורש רק מקרה אחד.'],
+['אם ל־a חסם תחתון אקספוננציאלי, אז בהכרח ל־b חסם תחתון אקספוננציאלי.',0,'לא נכון. b יכולה להיות ב־P. אין שום רדוקציה שקושרת בין a ל־b.']]},
+{src:'מועד ב׳ 2026',ctx:`נתונות ארבע בעיות: ${M('a,b ∈ NP')}, ${M('c ∈ NPC')}, ${M('d ∈ NP-Hard')}`,items:[
+['אם לא ניתן לאמת בזמן פולינומיאלי את הפתרון הנכון של d, אז d אינה ב־NP.',1,'נכון. זו בדיוק ההגדרה של NP: אימות בזמן פולינומיאלי.'],
+['אם P שונה מ־NP, אז לא ניתן לאמת פתרון נכון של c בזמן פולינומיאלי.',0,'לא נכון. c ב־NP, ולכן תמיד אפשר לאמת פתרון שלה בזמן פולינומיאלי.'],
+['c קשה לפחות כמו b.',1,'נכון. b ב־NP ו־c היא NPC, ולכן יש רדוקציה מ־b ל־c.'],
+['אם החסם התחתון של d אקספוננציאלי, אז החסם התחתון של a אקספוננציאלי.',0,'לא נכון. a יכולה להיות ב־P.'],
+['קיימת בעיה ב־NPC שלא ניתן לאמת את הפתרון הנכון שלה בזמן פולינומיאלי.',0,'לא נכון. כל בעיה NPC נמצאת ב־NP.']]},
+{src:'מועד ב׳ 2023',ctx:`נתונות שלוש בעיות: ${M('a,b ∈ NP')}, ${M('c ∈ NPC')}`,items:[
+['ייתכן ש־c ב־P וגם P שונה מ־NP.',0,'לא נכון. אם בעיה NPC נמצאת ב־P, המחלקות שוות.'],
+['c ב־NP.',1,'נכון. NPC מוגדרת כחלק מ־NP.'],
+['אם קיימת רדוקציה פולינומיאלית מ־a ל־b ומ־b ל־c, אז b היא NPC.',0,'לא נכון. רדוקציות אל c לא אומרות שום דבר על הקושי של b. כדי ש־b תהיה NPC צריך רדוקציה מבעיה NPC אליה.'],
+['יכול להיות שקיימת רדוקציה פולינומיאלית מ־c ל־a.',1,'נכון. למשל אם a היא בעצמה NPC.'],
+['קיימת רדוקציה פולינומיאלית מ־<bdi>3-COLOR</bdi> ל־<bdi>3-CNF-SAT</bdi>.',1,'נכון. <bdi>3-COLOR</bdi> ב־NP ו־<bdi>3-CNF-SAT</bdi> היא NPC.']]},
+{src:'מועד ב׳ 2018',ctx:`נתונות ארבע בעיות: ${M('a,d ∈ NP')}, ${M('b ∈ P')}, ${M('c ∈ NPC')}`,items:[
+['אם קיימות רדוקציות פולינומיאליות מ־a ל־b, מ־b ל־c ומ־c ל־d, אז P שווה ל־NP.',0,'לא נכון. יוצא רק ש־a ב־P ו־d היא NPC. אף בעיה NPC לא הגיעה ל־P.'],
+['אם קיימת רדוקציה כלשהי מ־d ל־b, אז P שווה ל־NP.',0,'לא נכון. הרדוקציה לא חייבת להיות פולינומיאלית, ו־d גם לא בהכרח NPC.'],
+['אם קיימת רדוקציה פולינומיאלית מ־c ל־b ומ־b ל־a, אז c ב־P.',1,'נכון. יש רדוקציה מ־c ל־b ו־b ב־P.'],
+['אם b היא NPC ו־d ב־P, אז P שווה ל־NP.',1,'נכון. b ב־P ובאותו זמן NPC.'],
+['אם ל־c חסם תחתון אקספוננציאלי, אז ל־a חסם תחתון אקספוננציאלי.',0,'לא נכון. a יכולה להיות ב־P.']]},
+{src:'מועד א׳ 2017',ctx:`L היא מחלקת הבעיות שנפתרות בזמן לינארי. ${M('a ∈ L')}, ${M('b ∈ P')}, ${M('c ∈ NP')}, ${M('d ∈ NPC')}`,items:[
+['אם קיימת רדוקציה פולינומיאלית מ־c ל־d ומ־d ל־c, אז P שווה ל־NP.',0,'לא נכון. יוצא רק ש־c גם היא NPC.'],
+['אם קיימת רדוקציה פולינומיאלית מ־b ל־a, אז b ב־L.',0,'לא נכון. הרדוקציה עצמה יכולה לקחת זמן פולינומיאלי, לא לינארי.'],
+['אם קיימת רדוקציה פולינומיאלית מ־d ל־a, אז L שווה ל־NP.',0,'לא נכון. אפשר להסיק רק ש־P שווה ל־NP.'],
+['אם a היא NPC, אז P שווה ל־NP.',1,'נכון. a ב־P, כי זמן לינארי הוא פולינומיאלי.'],
+['אם ל־c חסם תחתון אקספוננציאלי, אז ל־d חסם תחתון אקספוננציאלי.',1,'נכון. c ניתנת לרדוקציה ל־d, ולכן d קשה לפחות כמוה.']]},
+{src:'מועד ב׳ 2016',ctx:`כל הבעיות ב־NP. ${M('a ∈ P')}, ${M('c ∈ NPC')}, ויש רדוקציות מ־b ל־c ומ־c ל־d`,items:[
+['אם b היא NPC, אז קיימת רדוקציה פולינומיאלית מ־c ל־b.',1,'נכון. כל בעיה ב־NP ניתנת לרדוקציה לבעיה NPC.'],
+['אם קיימת רדוקציה מ־d ל־b ומ־b ל־a, אז P שווה ל־NP.',1,'נכון. השרשרת מ־c ל־d, ל־b ול־a מביאה בעיה NPC לבעיה ב־P.'],
+['אם קיימת רדוקציה מ־a ל־b, אז b היא NPC.',0,'לא נכון. רדוקציה מבעיה ב־P לא אומרת כלום.'],
+['אם קיימת רדוקציה מ־a ל־d, אז P שווה ל־NP.',0,'לא נכון. רדוקציה מבעיה ב־P לא אומרת כלום.'],
+['אם ל־b חסם תחתון אקספוננציאלי, אז P שונה מ־NP.',1,'נכון. b ב־NP ואינה ב־P.']]},
+{src:'תרגול 11',ctx:`נתונות שלוש בעיות ${M('a,b,c ∈ NP')}, ויש רדוקציות פולינומיאליות מ־a ל־b ומ־b ל־c`,items:[
+['a היא NPC אם ורק אם c היא NPC.',0,'לא נכון. אם a היא NPC אז גם c. אבל c יכולה להיות NPC גם כש־a ב־P.'],
+['אם c ב־P, אז a ב־P.',1,'נכון. יש רדוקציה משורשרת מ־a ל־c.'],
+['קיימת רדוקציה פולינומיאלית מ־a ל־c.',1,'נכון. שרשור של רדוקציות פולינומיאליות הוא רדוקציה פולינומיאלית.'],
+['אם c ב־P, אז P שווה ל־NP.',0,'לא נכון. אף אחת מהבעיות לא ידועה כ־NPC.']]},
+{src:'תרגול 11',ctx:'נניח שחסם תחתון לבעיה <bdi>3-CNF-SAT</bdi> הוא 3 בחזקת n log n',items:[
+['P שונה מ־NP.',1,'נכון. בעיה NPC אינה ב־P.'],
+['לכל בעיה ב־NP יש את אותו חסם תחתון.',0,'לא נכון. יש ב־NP גם בעיות שנפתרות בזמן פולינומיאלי.'],
+['אין בעיה NPC שיש לה אלגוריתם דטרמיניסטי פולינומיאלי.',1,'נכון. אם הייתה כזו, <bdi>3-CNF-SAT</bdi> הייתה נפתרת בזמן פולינומיאלי.']]},
+{src:'מועד א׳ 2015',ctx:'נניח שקיים אלגוריתם דטרמיניסטי שפותר את בעיית הקליקה בזמן n בחזקת 4 במקרה הגרוע',items:[
+['P שווה ל־NP.',1,'נכון. קליקה היא NPC ונפתרה בזמן פולינומיאלי.'],
+['לכל בעיה ב־NP קיים אלגוריתם דטרמיניסטי שזמן הריצה שלו הוא n בחזקת 4.',0,'לא נכון. הרדוקציה לקליקה עלולה להגדיל את הקלט פולינומיאלית, ולכן החזקה יכולה לגדול.'],
+['לכל בעיה R ב־NP קיים קבוע שתלוי ב־R, כך שהבעיה נפתרת בזמן n בחזקת הקבוע.',1,'נכון. זו בדיוק המשמעות של P שווה ל־NP.']]},
+];
+let tfState=store.get('tf',{});
+function renderTF(){
+  let html='',sc=0,dn=0;
+  TF.forEach((set,si)=>{
+    html+=`<div class="tf-set"><div class="ctx">${set.ctx}</div><div class="note">${set.src}</div>`;
+    set.items.forEach((it,ii)=>{const k=si+'-'+ii,ans=tfState[k];let cls='',why='';
+      if(ans!=null){dn++;const ok=ans===it[1];sc+=ok?1:-1;cls=ok?'right':'wrong';why=`<div class="why">${ok?'צדקת.':'טעית.'} ${it[2]}</div>`}
+      html+=`<div class="tf ${cls}"><div>${it[0]}</div><div class="btns"><button data-k="${k}" data-v="1" class="${ans===1?'pick':''}">נכון</button><button data-k="${k}" data-v="0" class="${ans===0?'pick':''}">לא נכון</button></div>${why}</div>`});
+    html+='</div>'});
+  $('#tfList').innerHTML=html;$('#tfScore').textContent=sc;$('#tfDone').textContent=dn;
+  $$('#tfList button').forEach(b=>b.onclick=()=>{tfState[b.dataset.k]=+b.dataset.v;store.set('tf',tfState);renderTF()});
+}
+renderTF();
+$('#tfReset').onclick=()=>{tfState={};store.set('tf',tfState);renderTF()};
+
+/* ---------- Regular or not ---------- */
+const REG=[
+[`${M('L = { w ∈ {a,b}* : #a(w) mod 3 = #b(w) mod 3 }')}`,1,'רגולרית. מספיק לזכור את ההפרש מודולו 3 (או רשת של 9 מצבים).'],
+[`${M('L = { a^n b^n V ∪ b^n a^n V : n ≥ 0, V ∈ {a,b}*, |V| ≥ 2 }')}`,1,'רגולרית. כש־n=0 מקבלים כל מילה באורך 2 לפחות, והשפה כולה היא בדיוק זה. הביטוי הוא (a+b)(a+b)(a+b)*. זו השאלה ממועד ב׳ 2026.'],
+[`${M('L = { w ∈ {a,b,c}* : #b(w) ≠ #a(w) + #c(w) }')}`,0,'לא רגולרית. מוכיחים על המשלימה, שבה התנאי הוא שוויון. בוחרים את המילה a^m b^2m c^m ומנפחים את ה־a.'],
+[`${M('L = { a^x b a^y : x mod 2 = y mod 2 }')}`,1,'רגולרית. זוגיות היא תנאי סופי. מפרידים לשני המקרים: שני הצדדים זוגיים או שניהם אי־זוגיים.'],
+[`${M('L = { x w x : x, w ∈ {a,b}+ }')}`,0,'לא רגולרית. צריך לזכור את x, שאורכו לא חסום. בפתרון הרשמי בחרו את המילה a^m b b a^m b.'],
+[`${M('L = { a^y b^n : y > n, (y+n) mod 2 = 0 }')}`,0,'לא רגולרית, בגלל ההשוואה בין y ל־n. בוחרים a^(m+2) b^m ו־i=0, עם חלוקה למקרים לפי k.'],
+[`${M('L = { a^m b^n } ∩ { w : |w| mod 2 = 0 }')}`,1,'רגולרית. חיתוך של שתי שפות רגולריות.'],
+[`${M('L = { w : #a(w) < #b(w)  and  #a(w), #b(w) both odd }')}`,0,'לא רגולרית. אי־השוויון דורש זיכרון לא חסום. בוחרים a^(2m+1) b^(2m+3) ומנפחים עם i=3.'],
+[`${M('L = { w ∈ {0,1}* : #1(w) = 1  and  |w| mod 3 = 2 }')}`,1,'רגולרית. אוטומט עם 6 מצבים: מספר האחדים (0 או 1) כפול האורך מודולו 3.'],
+[`${M('L = { w ∈ {a,b}* : w = w^R  and  #a(w) = #b(w) }')}`,0,'לא רגולרית. גם הפלינדרום וגם השוויון דורשים זיכרון לא חסום.'],
+[`${M('L = { a^n b^p c^r : p < n + r ;  n, p, r > 0 }')}`,0,'לא רגולרית. בוחרים את המילה a^m b^m c, ועם i=0 התנאי נשבר.'],
+[`${M('L = { w ∈ {a,b}* : abw = wba }')}`,1,'רגולרית, מתרגול 5. הפתרון הוא a(ba)*. מלכודת: נראה כמו תנאי על המילה כולה, אבל התשובה פשוטה.'],
+[`${M('L = { V X V^R : V, X ∈ {a,b}* }')}`,1,'רגולרית, מתרגול 5. בוחרים V ריקה, ואז כל מילה היא X. השפה היא (a+b)*.'],
+[`${M('L = { w ∈ {a,b}* : #ab(w) = #ba(w) }')}`,1,'רגולרית, מתרגול 5. מספר המופעים של ab ושל ba שווה בדיוק כשהאות הראשונה שווה לאחרונה (או שהמילה ריקה). מספיק DFA עם 5 מצבים.'],
+[`${M('L = { V a V : V ∈ {a,b}* }')}`,0,'לא רגולרית, מתרגול 4. בוחרים את המילה b^m a b^m ומנפחים עם i=2.'],
+[`${M('L = { a^(n²) : n ≥ 0 }')}`,0,'לא רגולרית, מתרגול 5. בוחרים a^(m²) ו־i=2. אין ריבוע בין m² ל־(m+1)².'],
+[`${M('L = { a^p : p prime }')}`,0,'לא רגולרית, מעבודה 2. בוחרים ראשוני p גדול מ־m, ומנפחים עם i=p+1. האורך יוצא p(k+1), שאינו ראשוני.'],
+[`${M('L = { w : w = w^R  or  |w| mod 3 = 1 }')}`,0,'לא רגולרית, מתרגול 5. בוחרים a^3m bb a^3m ו־i=4: המילה לא פלינדרום, והאורך נותן שארית 2.'],
+[`${M('L = { a^n b^n } ∪ { w : |w| mod 3 = 0 }')}`,0,'לא רגולרית, מעבודה 2. בוחרים a^(3m+1) b^(3m+1) ו־i=4. איחוד עם שפה רגולרית לא תמיד מציל.'],
+[`${M('L = { w : (#a(w)·#b(w)) mod 3 = 1 } ∪ { w : #a(w) mod 3 = #b(w) mod 3 }')}`,1,'רגולרית. שני התנאים תלויים רק בשאריות מודולו 3, ולכן רשת של 9 מצבים. זו השאלה ממועד א׳ 2026.'],
+];
+let regState=store.get('reg',{});
+function renderReg(){
+  $('#regList').innerHTML=REG.map((r,i)=>{const a=regState[i];let cls='',why='';if(a!=null){const ok=a===r[1];cls=ok?'right':'wrong';why=`<div class="why">${ok?'צדקת.':'טעית.'} ${r[2]}</div>`}
+  return `<div class="tf ${cls}"><div style="overflow-x:auto">${r[0]}</div><div class="btns"><button data-i="${i}" data-v="1" class="${a===1?'pick':''}">רגולרית</button><button data-i="${i}" data-v="0" class="${a===0?'pick':''}">לא רגולרית</button></div>${why}</div>`}).join('');
+  $$('#regList button').forEach(b=>b.onclick=()=>{regState[b.dataset.i]=+b.dataset.v;store.set('reg',regState);renderReg()});
+}
+renderReg();
+
+/* ---------- Exam questions ---------- */
+const Q=[
+{t:'np',tag:'שאלה 1',src:'מועד ב׳ 2026',title:'טבלת אחד־שתיים (OTT)',
+body:`נתונה טבלה בגודל M על N שכל תא בה הוא 0 או 1, ומספר טבעי k. צריך לבחור k שורות ולסכום כל עמודה רק בשורות שנבחרו. הבעיה שואלת האם אפשר לבחור k שורות כך שכל סכום עמודה יהיה 1 או 2 (ולא שום מספר אחר). הוכיחו שהבעיה היא NPC.`,
+sol:`<p><b>ב־NP</b>: בהינתן k שורות, סוכמים כל עמודה ובודקים שהסכום הוא 1 או 2. הזמן הוא <bdi class="m">O(M·N)</bdi>.</p>
+<p><b>רדוקציה מכיסוי קודקודים</b> (הפתרון הרשמי). בהינתן גרף G ומספר k: כל קודקוד הופך לשורה, כל קשת הופכת לעמודה, ובתא יש 1 אם הקודקוד הוא קצה של הקשת. ה־k נשאר אותו k.</p>
+<p><b>כיוון ראשון</b>: אם יש כיסוי קודקודים בגודל k, בוחרים את השורות שלו. כל קשת מכוסה, ולכן כל עמודה מקבלת לפחות 1. לכל קשת יש שני קצוות בלבד, ולכן בכל עמודה יש לכל היותר שני אחדים. הסכום הוא 1 או 2.</p>
+<p><b>כיוון שני</b>: אם יש k שורות שבהן כל סכום הוא 1 או 2, אז בכל עמודה יש לפחות 1, כלומר כל קשת נוגעת בקודקוד שנבחר. הקודקודים שנבחרו הם כיסוי בגודל k.</p>
+<p><b>זמן</b>: בניית הטבלה לוקחת <bdi class="m">O(|V|·|E|)</bdi>.</p>
+<p class="note">בפתרון נכתב שרוב הניסיונות לרדוקציה מ־SAT לא היו נכונים.</p>`},
+{t:'np',tag:'שאלה 1',src:'מועד א׳ 2026',title:'משחק הצפרדע (JFG)',
+body:`לוח עם N שורות ובולי עץ במשבצות. הצפרדע מתחיל לפני שורה 1, ובכל צעד קופץ לבול עץ כלשהו בשורה הבאה. לכל בול עץ יש רשימה סימטרית של בולים "מחוברים". כשהצפרדע קופץ על בול, כל הבולים שמחוברים אליו נופלים ואי אפשר לקפוץ עליהם יותר. האם יש סדרת קפיצות שמגיעה אל אחרי שורה N? הוכיחו שהבעיה היא NPC.`,
+sol:`<p><b>ב־NP</b>: בהינתן מסלול, בודקים שיש בול אחד בכל שורה ושאף בול במסלול לא מחובר לבול קודם במסלול. הזמן פולינומיאלי.</p>
+<p><b>רדוקציה מ־3-CNF-SAT</b>: כל פסוקית הופכת לשורה, כך שאם יש m פסוקיות יש m שורות. כל ליטרל בפסוקית הופך לבול עץ בשורה שלה. ליטרל x מחובר לכל המופעים של ¬x בשאר הפסוקיות, ולהפך.</p>
+<p><b>כיוון ראשון</b>: בהינתן השמה מספקת, בוחרים מכל פסוקית ליטרל שהוא אמת. ההשמה לא מכילה ליטרל ושלילתו, ולכן אף בול שנבחר לא יפול. יש מסלול.</p>
+<p><b>כיוון שני</b>: מסלול כולל בול אחד מכל שורה, ולא יכול להכיל גם x וגם ¬x, כי קפיצה על x מפילה את כל ה־¬x. לכן מגדירים כל ליטרל במסלול כאמת (ושאר המשתנים באופן שרירותי). ההשמה עקבית ומספקת כל פסוקית.</p>
+<p><b>זמן</b>: מספר החיבורים לכל היותר ריבועי במספר הליטרלים.</p>
+<p class="note">בפתרון נכתב שגם רדוקציה מקבוצה בלתי תלויה התקבלה.</p>`},
+{t:'np',tag:'שאלה 1',src:'מועד ב׳ 2017, ב׳ 2023',title:'קבוצות מספקות (GS)',
+body:`נתונות N קבוצות של מספרים ומספר k. האם יש k קבוצות שביחד מכילות את כל המספרים שמופיעים ב־N הקבוצות? הוכיחו שהבעיה היא NPC.`,
+sol:`<p><b>ב־NP</b>: בהינתן k קבוצות, בודקים שכל מספר מופיע באחת מהן. הזמן פולינומיאלי.</p>
+<p><b>רדוקציה מכיסוי קודקודים</b>: בהינתן גרף ומספר k, ממספרים את הקשתות. לכל קודקוד יוצרים קבוצה עם המספרים של הקשתות שנוגעות בו. ה־k נשאר.</p>
+<p><b>כיוון ראשון</b>: כיסוי בגודל k נוגע בכל קשת, ולכן הקבוצות שלו מכילות את כל המספרים.</p>
+<p><b>כיוון שני</b>: k קבוצות שמכילות את כל המספרים מתאימות ל־k קודקודים שנוגעים בכל הקשתות. זה כיסוי קודקודים.</p>
+<p class="note">פרט עדין: קודקוד מבודד נותן קבוצה ריקה. זה לא משנה את הנכונות.</p>`},
+{t:'np',tag:'שאלה 1',src:'מועד ב׳ 2023',title:'קבוצה פוגעת בגרף דו־צדדי (BHS)',
+body:`נתון גרף דו־צדדי עם צדדים U ו־V, ומספר k. האם יש תת־קבוצה של U בגודל k כך שכל קודקוד ב־V מחובר לפחות לקודקוד אחד שלה? מותר להשתמש בכך שהבעיה GS היא NPC. הוכיחו שהבעיה היא NPC.`,
+sol:`<p><b>ב־NP</b>: בהינתן תת־קבוצה, בודקים את הגודל ועוברים על כל קודקוד ב־V. הזמן לינארי במספר הקשתות.</p>
+<p><b>רדוקציה מ־GS</b>: כל קבוצה הופכת לקודקוד ב־U, וכל מספר שמופיע באחת הקבוצות הופך לקודקוד ב־V. מחברים בקשת קבוצה למספר אם המספר נמצא בקבוצה. ה־k נשאר.</p>
+<p><b>שני הכיוונים</b>: k קבוצות שמכילות את כל המספרים שקולות בדיוק ל־k קודקודים ב־U שכל קודקוד ב־V מחובר לאחד מהם.</p>
+<p><b>זמן</b>: הגודל הוא סכום גדלי הקבוצות.</p>`},
+{t:'np',tag:'שאלה 1',src:'מועד ב׳ 2014',title:'גן החיות',
+body:`מנהל גן חיות צריך לשבץ N חיות לתאים. יש זוגות של חיות שאסור לשים באותו תא, וזוגות שחייבים לשים יחד. האם יש קבוצה של K חיות שאפשר לשכן יחד בתא אחד? הוכיחו שהבעיה היא NPC.`,
+sol:`<p><b>ב־NP</b>: עוברים על כל האילוצים ובודקים שהקבוצה המוצעת לא מפרה אף אחד מהם.</p>
+<p><b>רדוקציה מקליקה</b>: כל קודקוד הופך לחיה. לכל זוג קודקודים שאין ביניהם קשת מוסיפים אילוץ שאוסר לשים את החיות יחד. אין אילוצי "חייבים יחד". ה־K הוא גודל הקליקה.</p>
+<p><b>שני הכיוונים</b>: קבוצה של K חיות בלי זוג אסור מתאימה בדיוק ל־K קודקודים שכל שניים מהם מחוברים, כלומר קליקה.</p>
+<p><b>זמן</b>: לכל היותר ריבועי במספר הקודקודים.</p>`},
+{t:'np',tag:'שאלה 1',src:'מועד א׳ 2015',title:'סיפוק הצלעות',
+body:`בגרף ממושקל עם משקלים שלמים חיוביים, צריך לתת לכל קודקוד עלות שלמה לא שלילית, כך שלכל קשת סכום העלויות של שני הקצוות לפחות כמשקל הקשת, וסכום כל העלויות הוא K. הוכיחו שהבעיה היא NPC (מספיקות הרדוקציה והנכונות).`,
+sol:`<p><b>רדוקציה מכיסוי קודקודים</b>: אותו גרף, כל קשת מקבלת משקל 1, ו־K נשאר K. אסור לתת משקל לקודקודים בשלב הטרנספורמציה.</p>
+<p><b>כיוון ראשון</b>: לקודקודים בכיסוי נותנים עלות 1 ולשאר 0. כל קשת מקבלת לפחות 1, והסכום הוא K.</p>
+<p><b>כיוון שני</b>: בהינתן סיפוק בסכום K, הקודקודים עם עלות חיובית נוגעים בכל קשת, ויש מהם לכל היותר K. זה כיסוי. אם הוא קטן מ־K, מוסיפים לו קודקודים עד שהגודל הוא K.</p>
+<p class="note">בפתרון הרשמי נכתב: "כל תוספת למה שכתוב כאן אינה נכונה". תשובה קצרה ומדויקת עדיפה.</p>`},
+{t:'reg',tag:'שאלה 3',src:'מועד א׳ 2026',title:'b שונה מסכום a ו־c',
+body:`מעל האלפבית של a, ‏b ו־c נתונה השפה הבאה. אם היא רגולרית, הראו אוטומט או ביטוי רגולרי. אחרת, הוכיחו שאינה רגולרית.<div class="eq">L = { w : #b(w) ≠ #a(w) + #c(w) }</div>`,
+sol:`<p>השפה אינה רגולרית. מוכיחים שהמשלימה אינה רגולרית, כי המשלים של שפה רגולרית הוא רגולרי.</p>
+<p>נניח בשלילה שהמשלימה רגולרית, ולכן יש לה אוטומט עם m מצבים. בוחרים את המילה הבאה, שנמצאת במשלימה ואורכה לפחות m:</p>
+<div class="eq">w = a^m b^(2m) c^m
+x = a^t ,  y = a^k ,  z = a^q b^(2m) c^m ,   t + k + q = m ,   1 ≤ k ≤ m
+i = 2 :  a^(m+k) b^(2m) c^m  ∉  complement ,  since  2m ≠ (m+k) + m</div>
+<p>זו סתירה ללמת הניפוח, ולכן המשלימה אינה רגולרית, וגם L אינה רגולרית.</p>`},
+{t:'reg',tag:'שאלה 3',src:'מועד א׳ 2017',title:'פחות a מ־b, ושתי הכמויות אי־זוגיות',
+body:`מעל האלפבית של a ו־b:<div class="eq">L = { w : #a(w) &lt; #b(w)  and  #a(w) mod 2 = #b(w) mod 2 = 1 }</div>`,
+sol:`<p>השפה אינה רגולרית. נניח בשלילה שהיא רגולרית עם m מצבים ובוחרים:</p>
+<div class="eq">w = a^(2m+1) b^(2m+3)          (odd, odd, fewer a's)
+x = a^t ,  y = a^k ,  z = a^q a^(m+1) b^(2m+3) ,   1 ≤ k ≤ m
+i = 3 :  a^(2m+1+2k) b^(2m+3)  ∉ L ,  since  2m+1+2k ≥ 2m+3</div>
+<p>הזוגיות של מספר ה־a לא משתנה, כי מוסיפים <bdi class="m">2k</bdi>, אבל אי־השוויון נשבר לכל k. סתירה.</p>`},
+{t:'reg',tag:'שאלה 3',src:'מועד א׳ 2016',title:'y גדול מ־n והסכום זוגי',
+body:`<div class="eq">L = { a^y b^n : y &gt; n ,  (y + n) mod 2 = 0 }</div>`,
+sol:`<p>השפה אינה רגולרית. בוחרים את המילה הבאה ומנפחים עם i=0:</p>
+<div class="eq">w = a^(m+2) b^m
+i = 0 :  a^(m+2-k) b^m</div>
+<p><b>אם k=1</b>: מתקבלת המילה <bdi class="m">a<sup>m+1</sup>b<sup>m</sup></bdi>, והסכום אי־זוגי.</p>
+<p><b>אם k גדול מ־1</b>: מספר ה־a קטן או שווה למספר ה־b, ולכן התנאי y גדול מ־n נשבר.</p>
+<p>בשני המקרים המילה לא בשפה. סתירה.</p>`},
+{t:'reg',tag:'שאלה 3',src:'מועד א׳ 2026',title:'איחוד וחיתוך של שני תנאי מודולו',
+body:`מעל האלפבית של a ו־b נתונות שתי השפות הבאות. האם האיחוד שלהן רגולרי? האם החיתוך שלהן רגולרי?<div class="eq">L1 = { w : (#a(w) · #b(w)) mod 3 = 1 }
+L2 = { w : #a(w) mod 3 = #b(w) mod 3 }</div>`,
+sol:`<p>שתי השפות רגולריות. בונים רשת של 3 על 3 מצבים, שבה המצב הוא זוג השאריות של מספר ה־a ומספר ה־b מודולו 3. a מקדם את הרכיב הראשון ו־b את השני.</p>
+<ul><li><b>באיחוד</b> המצבים המקבלים הם (0,0), ‏(1,1) ו־(2,2).</li>
+<li><b>בחיתוך</b> המצבים המקבלים הם (1,1) ו־(2,2). המכפלה היא 1 או 4, ושתיהן נותנות שארית 1.</li></ul>`},
+{t:'auto',tag:'שאלת בחירה',src:'מועד א׳ 2026',title:'מ־NFA לביטוי רגולרי',
+body:`ב־NFA הבא מעל האלפבית של a, ‏b ו־c: למצב q0 (התחלה) יש לולאה עם a ומעבר עם b ל־q1. למצב q1 (מקבל) יש לולאה עם c, מעבר עם c חזרה ל־q0, ומעבר עם a או λ ל־q2. ממצב q2 יש מעבר עם b או λ ל־q0. בטלו את המצבים לפי הסדר q0, ‏q1 ואז q2.`,
+sol:`<p>מוסיפים את S ו־F. אחרי ביטול q0 הקשת מ־S ל־q1 היא <bdi class="m">a*b</bdi>, הלולאה על q1 היא <bdi class="m">c+ca*b</bdi>, והקשת מ־q2 ל־q1 היא <bdi class="m">(b+λ)a*b</bdi>.</p>
+<p>אחרי ביטול q1 מקבלים את הקשתות הבאות:</p>
+<div class="eq left">S→F  : a*b(c+ca*b)*
+S→q2 : a*b(c+ca*b)*(a+λ)
+q2→q2: (b+λ)a*b(c+ca*b)*(a+λ)
+q2→F : (b+λ)a*b(c+ca*b)*</div>
+<p>אחרי ביטול q2 מתקבלת התשובה הסופית:</p>
+<div class="eq">a*b(c+ca*b)* + a*b(c+ca*b)*(a+λ)[(b+λ)a*b(c+ca*b)*(a+λ)]*(b+λ)a*b(c+ca*b)*</div>`},
+{t:'auto',tag:'שאלת בחירה',src:'מהתרגול',title:'מ־NFA ל־DFA עם מעבר λ',
+body:`ב־NFA הבא מעל האלפבית של a ו־b: למצב q0 (התחלה) יש מעבר עם a ל־q1. ממצב q1 יש מעבר λ ל־q2 ומעבר עם b חזרה ל־q0. ממצב q2 (מקבל) יש מעבר עם a ל־q2. בנו DFA שקול.`,
+sol:`<p>סגור־λ של q1 הוא <bdi class="m">{q1,q2}</bdi>.</p>
+<div class="tbl"><table><tr><th>מצב</th><th class="c">עם a</th><th class="c">עם b</th><th class="c">מקבל?</th></tr>
+<tr><td><bdi class="m">{q0}</bdi></td><td class="c"><bdi class="m">{q1,q2}</bdi></td><td class="c"><bdi class="m">∅</bdi></td><td class="c">לא</td></tr>
+<tr><td><bdi class="m">{q1,q2}</bdi></td><td class="c"><bdi class="m">{q2}</bdi></td><td class="c"><bdi class="m">{q0}</bdi></td><td class="c">כן</td></tr>
+<tr><td><bdi class="m">{q2}</bdi></td><td class="c"><bdi class="m">{q2}</bdi></td><td class="c"><bdi class="m">∅</bdi></td><td class="c">כן</td></tr>
+<tr><td><bdi class="m">∅</bdi></td><td class="c"><bdi class="m">∅</bdi></td><td class="c"><bdi class="m">∅</bdi></td><td class="c">לא</td></tr></table></div>
+<p>מהקבוצה <bdi class="m">{q1,q2}</bdi> עם a: המצב q1 לא עובר, ו־q2 עובר ל־q2. עם b: המצב q1 עובר ל־q0, וסגור־λ של q0 הוא q0 עצמו.</p>`},
+{t:'tm',tag:'שאלת בחירה',src:'מועד ב׳ 2023',title:'מכונת טיורינג למינימום',
+body:`הקלט הוא מערך של מספרים חיוביים באונרי, מופרדים ב־#, למשל <bdi class="m">111#11111#11</bdi>. בנו מכונה שמשאירה על הסרט את המינימום באונרי (בדוגמה: <bdi class="m">11</bdi>).`,
+sol:`<div class="eq left">repeat:
+  scan all blocks: does every block still have an unmarked 1?
+    no  → go to CLEANUP
+    yes → in the FIRST block mark one 1 as Y,
+          in every other block mark one 1 as X
+CLEANUP:
+  turn every Y back into 1,
+  erase every other symbol (1, X, #) to blank → halt</div>
+<p>כל סיבוב מוריד 1 מכל מספר. המכונה עוצרת כשהמספר הקטן נגמר, ולכן מספר הסיבובים הוא בדיוק המינימום. מספר ה־Y בבלוק הראשון הוא מספר הסיבובים. כשמציירים מכונה, כל שורה בפסאודו־קוד הופכת לשני או שלושה מצבים עם לולאות מעבר.</p>`},
+{t:'tm',tag:'שאלת בחירה',src:'מועד ב׳ 2026',title:'מכונת טיורינג לחזקות של 3',
+body:`בנו מכונת טיורינג שמקבלת את השפה הבאה:<div class="eq">L = { a^(3^i) : i ≥ 0 }</div>`,
+sol:`<div class="eq left">1. If exactly one a remains → ACCEPT.
+2. Sweep left→right counting mod 3; in each group of three
+   unmarked a's keep the first, cross the other two (→ x).
+3. If the sweep ended in the middle of a group (count mod 3 ≠ 0) → REJECT.
+4. Return to the left end, go to 1.</div>
+<p>זו אותה מכונה כמו לחזקות של 2 מהתרגול. המצבים שסופרים עד 3 מחליפים את המצבים שסופרים עד 2.</p>`},
+{t:'tm',tag:'שאלת בחירה',src:'מבחנים רבים',title:'בעיית העצירה',
+body:`נסחו את בעיית העצירה והוכיחו שאינה ניתנת לפתרון.`,
+sol:`<p>ההוכחה המלאה נמצאת בפרק "בעיית העצירה" בלשונית הלימוד. חשוב לכתוב את שני המקרים של הרצת A על עצמה.</p>`},
+{t:'np',tag:'שאלת בחירה',src:'מועד ב׳ 2026',title:'רדוקציה מ־<bdi>3-COLOR</bdi> ל־<bdi>K-COLOR</bdi>',
+body:`נתון קבוע K שגדול או שווה ל־4. הראו רדוקציה פולינומיאלית מ־<bdi>3-COLOR</bdi> ל־<bdi>K-COLOR</bdi>.`,
+sol:`<p>ההוכחה המלאה נמצאת בפרק "רדוקציות מהשקפים": מוסיפים קליקה בגודל <bdi class="m">K−3</bdi> ומחברים אותה לכל הקודקודים. צריך להוכיח את שני הכיוונים.</p>`},
+{t:'np',tag:'שאלת בחירה',src:'מועד א׳ 2026',title:'מספרי ריפוד 1 ו־3 בסכום תת־קבוצה',
+body:`בבנייה מהשקפים (מ־<bdi>3-CNF-SAT</bdi> לסכום תת־קבוצה) מספרי הריפוד הם 1 ו־2, והיעד הוא אחדים בספרות המשתנים ו־4 בספרות הפסוקיות. סטודנט שינה את מספרי הריפוד ל־1 ו־3 ואת היעד ל־5 בכל ספרת פסוקית. האם הוא צודק?`,
+sol:`<p>הוא טועה. אם השמה מספקת נותנת אמת לכל שלושת הליטרלים בפסוקית, העמודה מקבלת 3. כדי להגיע ל־5 חסר 2, ואי אפשר להרכיב 2 מ־1 ו־3. עם 1 ו־2 אפשר להשלים כל ערך בין 1 ל־3 עד 4.</p>`},
+{t:'auto',tag:'בסיס',src:'תרגול 2',title:'DFA למילים שנגמרות ב־abb',
+body:`בנו DFA מעל האלפבית של a ו־b שמקבל בדיוק את המילים שנגמרות ב־abb.`,
+sol:`<p>כל מצב אומר כמה מהסיומת abb ראינו ברצף בסוף מה שנקרא עד עכשיו.</p>
+<div class="tbl"><table><tr><th>מצב</th><th>משמעות</th><th class="c">עם a</th><th class="c">עם b</th></tr>
+<tr><td>q0 (התחלה)</td><td>אין התקדמות</td><td class="c">q1</td><td class="c">q0</td></tr>
+<tr><td>q1</td><td>ראינו a</td><td class="c">q1</td><td class="c">q2</td></tr>
+<tr><td>q2</td><td>ראינו ab</td><td class="c">q1</td><td class="c">q3</td></tr>
+<tr><td>q3 (מקבל)</td><td>ראינו abb</td><td class="c">q1</td><td class="c">q0</td></tr></table></div>
+<p>המלכודת של הטעות הנפוצה: ב־q2 עם a לא חוזרים ל־q0 אלא ל־q1, כי ה־a החדשה יכולה להתחיל את הסיומת.</p>`},
+{t:'auto',tag:'בסיס',src:'תרגול 2',title:'DFA לשני תנאים',
+body:`בנו DFA מעל האלפבית של a ו־b שמקבל מילים שבהן מספר ה־a אי־זוגי ומספר ה־b זוגי.`,
+sol:`<p>ארבעה מצבים, כל אחד זוג של זוגיות ה־a וזוגיות ה־b. האות a משנה את הרכיב הראשון, והאות b את השני.</p>
+<div class="eq">(even,even) start      (odd,even) ACCEPT      (even,odd)      (odd,odd)</div>`},
+{t:'auto',tag:'שאלת בחירה',src:'מועד ב׳ 2023',title:'מביטוי רגולרי ל־NFA',
+body:`הפכו את הביטוי הרגולרי הבא ל־NFA לפי האלגוריתם שנלמד. מספיק להראות את האוטומט הסופי.<div class="eq">(ba+λ)(ab*+c*+b)</div>`,
+sol:`<p>הפתרון המלא, עם כל הקשתות, נמצא בפרק "ביטויים רגולריים" בלשונית הלימוד. בודקים שהאוטומט מקבל, למשל, את המילים b, ‏baabb, ‏ccc ואת המילה הריקה.</p>`},
+{t:'np',tag:'תרגול 10',src:'תרגול 10',title:'כיסוי בקליקות',
+body:`בהינתן גרף ומספר k: האם אפשר לחלק את כל הקודקודים ל־k קבוצות זרות, כך שכל קבוצה היא קליקה? הוכיחו שהבעיה היא NPC.`,
+sol:`<p><b>ב־NP</b>: בודקים שכל קודקוד נמצא בקבוצה אחת בדיוק, ושבכל קבוצה כל זוג מחובר.</p>
+<p><b>רדוקציה מ־K-COLOR</b>: בונים את הגרף המשלים, עם אותו k.</p>
+<p><b>שני הכיוונים</b>: קבוצת צבע אחת בגרף המקורי היא קבוצה בלתי תלויה, ולכן קליקה בגרף המשלים. להפך, קליקה במשלים היא קבוצה בלתי תלויה במקור, ואפשר לתת לה צבע אחד.</p>
+<p><b>זמן</b>: בניית המשלים לוקחת זמן ריבועי במספר הקודקודים.</p>`},
+{t:'tm',tag:'שאלת בחירה',src:'מועד ב׳ 2018',title:'סרט חסום לצד אחד',
+body:`הוכיחו שמכונת טיורינג עם סרט שאינסופי רק לצד אחד שקולה למכונה רגילה. יש להראות שכל פעולה במכונה אחת אפשר לבצע במכונה השנייה.`,
+sol:`<p><b>מחסום למכונה רגילה</b>: מכונה רגילה פשוט לא משתמשת בחלק השמאלי של הסרט. אפשר לסמן את תחילת הקלט בסימן מיוחד כדי לא לחצות אותו.</p>
+<p><b>ממכונה רגילה לחסומה</b>: מעבר ימינה, ומעבר שמאלה שלא מהתא הראשון, מתבצעים כרגיל. כשצריך לזוז שמאלה מהתא הראשון, מזיזים את כל התוכן תא אחד ימינה: רצים ימינה עד הרווח, ובדרך חזרה מעתיקים כל תא לתא שמימינו. בתא הראשון כותבים רווח, וממשיכים משם כאילו זזנו שמאלה.</p>`},
+];
+const TYPES=[['all','הכול'],['np','הוכחות NPC'],['reg','רגולריות'],['auto','אוטומטים'],['tm','מכונות טיורינג']];
+let qf='all';
+$('#qFilters').innerHTML=TYPES.map(t=>`<button class="chip" data-t="${t[0]}" aria-pressed="${t[0]===qf}">${t[1]}</button>`).join('');
+$$('#qFilters .chip').forEach(c=>c.onclick=()=>{qf=c.dataset.t;$$('#qFilters .chip').forEach(x=>x.setAttribute('aria-pressed',x===c));renderQ()});
+const drafts=store.get('drafts',{});
+function renderQ(){
+  $('#qList').innerHTML=Q.map((q,i)=>(qf==='all'||q.t===qf)?`<div class="q" id="q${i}"><div class="meta"><span>${q.tag}</span><span>${q.src}</span></div><h3>${q.title}</h3><div>${q.body}</div>
+  <label class="note" for="ans${i}">התשובה שלך</label><textarea id="ans${i}" data-i="${i}">${(drafts[i]||'').replace(/</g,'&lt;')}</textarea>
+  <div class="actions"><button class="btn check" data-i="${i}">בדיקה עם Claude</button><span class="note" id="n${i}"></span></div><div class="fb" id="fb${i}" hidden></div>
+  <details class="sol"><summary>פתרון</summary>${q.sol}</details></div>`:'').join('');
+  $$('#qList textarea').forEach(t=>t.oninput=()=>{drafts[t.dataset.i]=t.value;store.set('drafts',drafts)});
+  $$('#qList .check').forEach(b=>{b.hidden=!sample;b.onclick=()=>checkAns(+b.dataset.i,b)});
+}
+
+/* ---------- Claude ---------- */
+let sample=null;
+const COURSE=`אתה מתרגל בקורס "מודלים חישוביים" (372.1.2306, אוניברסיטת בן-גוריון, מרצה: פרופ' אריאל פלנר). הסטודנט מתכונן למועד ג' ב-8/10/2026.
+מבנה המבחן: שאלה 1 (26 נק') הוכחת NPC ברדוקציה; שאלה 2 (5 נק') חמש קביעות נכון/לא נכון על P/NP/NPC, טעות מורידה נקודה; שאלה 3 (23 נק') האם שפה רגולרית: אוטומט/ביטוי או הוכחה בלמת הניפוח; דקדוקים חסרי הקשר ואוטומט מחסנית אינם בחומר השנה. שאלות 4-6 (בוחרים 2): המרות NFA/DFA/ביטוי רגולרי, מכונות טיורינג, בעיית העצירה, מכונה אוניברסלית, הוכחות NPC מהשקפים (3-COLOR, Subset-Sum, K-COLOR).
+מוסכמות הקורס: λ היא המילה הריקה; + הוא איחוד בביטוי רגולרי; בלמת הניפוח: אוטומט עם m מצבים, w=xyz, |xy|≤m, |y|≥1, מנפחים בתוך m התווים הראשונים; הוכחת NPC: (1) ב-NP (2) טרנספורמציה מבעיה מוכרת אל החדשה (3) נכונות בשני הכיוונים (4) זמן פולינומיאלי. בעיות מוכרות: SAT, 3-CNF-SAT, Clique, IS, VC, 3-COLOR, Subset-Sum, Hamiltonian, TSP.
+ענה בעברית, קצר וברור, בטקסט פשוט (בלי LaTeX ובלי markdown כבד). כתוב ביטויים מתמטיים בשורה נפרדת. אם הסטודנט טועה, אמור זאת ישירות והסבר איך לתקן.`;
+async function initClaude(){
+  try{ sample = window.claude && await window.claude.use('sample'); }catch(e){ sample=null }
+  if(!sample){ $('#askNote').textContent='שאלות ל־Claude עובדות רק בגרסה שב־claude.ai, עם חיבור לאינטרנט.'; $('#askBtn').disabled=true; }
+  renderQ();
+}
+function errText(e){const c=e&&e.code;return c==='not_granted'?'לא אושרה גישה ל־Claude בדף הזה.':c==='rate_limited'?'יותר מדי בקשות. נסו שוב בעוד רגע.':c==='session_expired'?'צריך להתחבר מחדש ל־claude.ai.':'משהו השתבש. נסו שוב.'}
+
+async function checkAns(i,btn){
+  const q=Q[i],ans=($('#ans'+i).value||'').trim(),fb=$('#fb'+i),n=$('#n'+i);
+  if(!ans){n.textContent='כתבו קודם תשובה.';return}
+  const tmp=document.createElement('div');tmp.innerHTML=q.body;const body=tmp.textContent;tmp.innerHTML=q.sol;const sol=tmp.textContent;
+  btn.disabled=true;n.textContent='';fb.hidden=false;fb.textContent='חושב…';
+  try{
+    await sample(`${COURSE}\n\nבדוק את תשובת הסטודנט לשאלה ממבחן (${q.src}). תן: ציון משוער מתוך הניקוד, מה טוב, מה חסר או שגוי, ואיך לתקן. אל תכתוב את כל הפתרון מחדש אם התשובה קרובה.\n\nהשאלה:\n${body}\n\nפתרון רשמי/מנחה:\n${sol}\n\nתשובת הסטודנט:\n${ans}`,{cache:false,onText:({text})=>{fb.textContent=text}});
+  }catch(e){ if(e&&e.text)fb.textContent=e.text; else fb.hidden=true; n.textContent=errText(e); }
+  btn.disabled=false;
+}
+
+/* chat */
+let turns=[],ctl=null;
+function addMsg(role,text){$('#emptyMsg')?.remove();const d=document.createElement('div');d.className='msg '+(role==='user'?'u':'a');d.dir='auto';d.textContent=text;$('#log').append(d);return d}
+async function ask(text){
+  if(!sample||!text.trim())return;
+  turns.push({role:'user',content:text});addMsg('user',text);$('#askBox').value='';
+  const bubble=addMsg('assistant','חושב…');
+  ctl=new AbortController();$('#askBtn').disabled=true;$('#stopBtn').hidden=false;$('#askNote').textContent='';
+  const recent=turns.slice(-12);
+  try{
+    const {text:out}=await sample([{role:'user',content:COURSE},...recent],{cache:false,signal:ctl.signal,onText:({text})=>{bubble.textContent=text}});
+    turns.push({role:'assistant',content:out});
+  }catch(e){
+    if(e&&e.text){bubble.textContent=e.text;turns.push({role:'assistant',content:e.text})}else{bubble.remove();turns.pop()}
+    if(!e||e.code!=='cancelled')$('#askNote').textContent=errText(e);
+  }
+  $('#askBtn').disabled=false;$('#stopBtn').hidden=true;
+}
+$('#askBtn').onclick=()=>ask($('#askBox').value);
+$('#askBox').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();ask($('#askBox').value)}});
+$('#stopBtn').onclick=()=>ctl?.abort();
+$('#clearBtn').onclick=()=>{turns=[];$('#log').innerHTML='<p class="empty" id="emptyMsg">שאלו כל שאלה על החומר. התשובות מותאמות לקורס ולמבנה המבחן.</p>'};
+$$('.side button').forEach(b=>b.onclick=()=>{if(sample)ask(b.dataset.q);else $('#askBox').value=b.dataset.q});
+
+renderQ();
+initClaude();
+})();
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
+</body>
+</html>
